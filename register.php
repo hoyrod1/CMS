@@ -2,7 +2,7 @@
 /**
  * * @file
  * php version 8.2
- * Page for CMS registration
+ * Registration Page for CMS
  * 
  * @category CMS
  * @package  Registration_Configuration
@@ -10,13 +10,11 @@
  * @license  STC Media inc
  * @link     https://cms/www.registration.php
  */
-
-// require_once "insert_into_database.php";
-// require 'input_validation.php';
+require_once "includes/session.php";
 require_once "includes/db_conn.php";
 require_once "includes/functions.php";
-require_once "includes/session.php";
 require_once "includes/date_time.php";
+
 
 if (isset($_POST['submit'])) {
 
@@ -28,12 +26,11 @@ if (isset($_POST['submit'])) {
     ) { 
 
 
-        $name            = $_POST['name'];
-        $email           = $_POST['email'];
-        $contact_num     = $_POST['contact_num'];
-        $username        = $_POST['username'];
-
-        $password        = $_POST['password'];
+        $name            = testInput($_POST['name']);
+        $email           = testInput($_POST['email']);
+        $contact_num     = testInput($_POST['contact_num']);
+        $username        = testInput($_POST['username']);
+        $password        = testInput($_POST['password']);
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         $target_dir      = "uploads/";
@@ -42,7 +39,7 @@ if (isset($_POST['submit'])) {
         $uploadOk        = 1;
         $imageFileType   = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        $test_db = new Database("localhost", "root", "root", "API_ToDo_List");
+        $test_db = new Database("localhost", "root", "root", "cms");
 
         $sql = "INSERT INTO user_record(
 					name, 
@@ -64,8 +61,9 @@ if (isset($_POST['submit'])) {
         move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file);
 
         if ($execute) {
-            echo '<span class="success">Record has been submitted!"</span>';
             $test_db = null;
+            redirect('login.php');
+            $_SESSION["success_message"] = 'You have registered, please login.';
 
         } else {
             echo '<span class="error">Record has not been submitted!"</span>' ;

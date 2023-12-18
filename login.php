@@ -2,7 +2,7 @@
 /**
  * * @file
  * php version 8.2
- * Page for CMS login
+ * Login Page for CMS
  * 
  * @category CMS
  * @package  Login_Configuration
@@ -10,13 +10,12 @@
  * @license  STC Media inc
  * @link     https://cms/www.login.php
  */
-
+require_once "includes/session.php";
 require_once "includes/db_conn.php";
 require_once "includes/functions.php";
-require_once "includes/session.php";
 require_once "includes/date_time.php";
 
-$test_db = new Database("localhost", "root", "root", "API_ToDo_List");
+$test_db = new Database("localhost", "root", "root", "cms");
 $test = $test_db->conn();
 
 
@@ -26,22 +25,28 @@ if (isset($_SESSION['user_name'])) {
 
 if (isset($_POST['submit'])) {
 
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-    $username = test_input($_POST['username']);
-    $password = test_input($_POST['password']);
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $username        = testInput($_POST['username']);
+    $password        = testInput($_POST['password']);
+
     if (empty($username) || empty($password)) {
 
         $_SESSION['error_message'] = 'All fields should be filled out!';
         redirect('login.php');
 
     } else {
-        $user_login = login_attempt($username, $hashed_password);
 
-        var_dump($user_login);
+        $user_login = getUserByUserName($username);
 
-        if ($user_login) {
+        if ($user_login === false) {
+
+            $_SESSION["error_message"] = 'Failed to login! The user does not exist';
+            redirect('login.php');
+        
+        }
+
+        $password_verified = password_verify($password, $user_login["password"]);
+
+        if ($password_verified) {
             $_SESSION['user_id']         = $user_login['id'];
             $_SESSION['user_name']       = $user_login['username'];
             $_SESSION['admin_name']      = $user_login['admin_name'];
@@ -52,7 +57,7 @@ if (isset($_POST['submit'])) {
                  redirect('login.php');
             }
         } else {
-            $_SESSION["error_message"] = 'Failed to login! Incorect User name or Password.';
+            $_SESSION["error_message"] = 'Failed to login! Incorect Password.';
             redirect('login.php');
         }
     }

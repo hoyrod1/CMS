@@ -2,22 +2,20 @@
 /**
  * * @file
  * php version 8.2
- * Page for CMS registration
+ * Index Page for CMS
  * 
  * @category CMS
- * @package  Registration_Configuration
+ * @package  Index_Landing_Page
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/www.registration.php
+ * @link     https://cms/index.php
  */
-
- error_reporting(E_ALL);
-// ini_set("display_errors", "On");
-
+require_once "icludes/session.php";
+ini_set("display_errors", "On");
 require "includes/db_conn.php" ;
 require_once "includes/functions.php";
-require_once "icludes/session.php";
 require "includes/date_time.php";
+
 $database = new Database("localhost", "root", "root", "API_ToDo_List");
 $database->conn();
 ?>
@@ -46,7 +44,11 @@ $database->conn();
 <span class="navbar-toggler-icon"></span>
 </button>
 <ul class="navbar-nav ml-auto">
-<li class="nav-item"><a href="login.php" class="nav-link text-success"> <i class="fas fa-user-times"></i> Log In</a></li>
+<li class="nav-item">
+<a href="login.php" class="nav-link text-success"> 
+<i class="fas fa-user-times"></i> Log In
+</a>
+</li>
 </ul>
 </div>
 </nav>
@@ -58,7 +60,11 @@ $database->conn();
 <div class="container">
 <div class="row">
 <div class="col-md-12 ">
-<h1><i class="fas fa-text-height" style="color: white;"> Welcome to STC Media CMS Blog</i></h1>
+<h1>
+<i class="fas fa-text-height" style="color: white;"> 
+Welcome to STC Media CMS Blog
+</i>
+</h1>
 </div>
 </div>
 </div>

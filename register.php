@@ -8,7 +8,7 @@
  * @package  Registration_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/www.registration.php
+ * @link     https://cms/registration.php
  */
 require_once "includes/session.php";
 require_once "includes/db_conn.php";
@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
         $username        = testInput($_POST['username']);
         $password        = testInput($_POST['password']);
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
+        // ADD SECURITY FOR UPLOADED IMAGES
         $target_dir      = "uploads/";
         $photo           = $_FILES['photo']['name'];
         $target_file     = $target_dir.basename($photo);
@@ -62,8 +62,8 @@ if (isset($_POST['submit'])) {
 
         if ($execute) {
             $test_db = null;
-            redirect('login.php');
             $_SESSION["success_message"] = 'You have registered, please login.';
+            redirect('login.php');
 
         } else {
             echo '<span class="error">Record has not been submitted!"</span>' ;

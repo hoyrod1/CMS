@@ -8,7 +8,7 @@
  * @package  Login_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/www.login.php
+ * @link     https://cms/login.php
  */
 require_once "includes/session.php";
 require_once "includes/db_conn.php";
@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
         if ($password_verified) {
             $_SESSION['user_id']         = $user_login['id'];
             $_SESSION['user_name']       = $user_login['username'];
-            $_SESSION['admin_name']      = $user_login['admin_name'];
+            $_SESSION['admin_name']      = $user_login['name'];
             $_SESSION["success_message"] = 'Welcome ' . $_SESSION['user_name'];
             if (isset($_SESSION['trackingURL'])) {
                  redirect($_SESSION['trackingURL']);

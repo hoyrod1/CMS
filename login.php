@@ -5,7 +5,7 @@
  * Login Page for CMS
  * 
  * @category CMS
- * @package  Login_Configuration
+ * @package  Login_Page_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
  * @link     https://cms/login.php
@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
 
     } else {
 
-        $user_login = getUserByUserName($username);
+        $user_login = getAdmin($username);
 
         if ($user_login === false) {
 
@@ -47,6 +47,9 @@ if (isset($_POST['submit'])) {
         $password_verified = password_verify($password, $user_login["password"]);
 
         if ($password_verified) {
+            // $username = $user_login['name'];
+            // echo $username;
+            // exit;
             $_SESSION['user_id']         = $user_login['id'];
             $_SESSION['user_name']       = $user_login['username'];
             $_SESSION['admin_name']      = $user_login['name'];
@@ -54,7 +57,7 @@ if (isset($_POST['submit'])) {
             if (isset($_SESSION['trackingURL'])) {
                  redirect($_SESSION['trackingURL']);
             } else {
-                 redirect('login.php');
+                 redirect('dashboard.php');
             }
         } else {
             $_SESSION["error_message"] = 'Failed to login! Incorect Password.';
@@ -83,38 +86,63 @@ if (isset($_POST['submit'])) {
 
     </head>
     <body>
-<!-- NAV-BAR -->
+<!-- NAV-BAR BEGINS -->
     <div style="height: 10px;background-color: #f4f4f4;"></div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-    <div class="container">
-
-    <a href="index.php" class="navbar-brand">www.STCMediaBlog.com</a>
-    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-<div class="collapse navbar-collapse" id="navbarcollapseCMS">
-
-    </div>
-    </div>
-    </nav>
+          <!-- Brand -->
+          <div class="container">
+            <a href="index.php" class="navbar-brand">STC Media Blog</a>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Navbar links -->
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a href="index.php" class="nav-link">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">About Page</a>
+              </li>
+              <li class="nav-item">
+                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">Contact Page</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">Feature Page</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Service</a>
+              </li>
+              <li class="nav-item ml-5">
+                <a href="register.php" class="nav-link text-success"> 
+                  <i class="fa-solid fa-registered">Register</i>
+                </a>
+              </li>
+            </ul>
+            <!-- Navbar links -->
+          </div>
+        </nav>
     <div style="height: 10px;background-color: #f4f4f4;"></div>
     <!-- NAV BAR END-->
-    <hr>
-    <!-- HEADER BEGINS-->
-    <header class="bg-dark text-white py-3">
-    <div class="container">
-    <div class="row">
-    <div class="col-md-12 ">
-    <h1></h1>
-    </div>
-    </div>
-    </div>
-    </header>
-    <!-- HEADER ENDS-->
+<hr>
+<!-- HEADER BEGINS-->
+<header class="bg-dark text-white py-3">
+<div class="container">
+<div class="row">
+<div class="col-md-12 ">
+<h1></h1>
+</div>
+</div>
+</div>
+</header>
+<!-- HEADER ENDS-->
     <hr>
     <?php 
-    echo error_message(); 
-    echo success_message(); 
+    echo errorMessage(); 
+    echo successMessage(); 
     ?>
     <br>
 <!----------------------- MAIN AREA BEGINS --------------------------->
@@ -157,50 +185,8 @@ if (isset($_POST['submit'])) {
 </section>
 <!----------------------- MAIN AREA ENDS --------------------------->
 <hr>
-<!-- FOOTER BEGIN -->
-<div style="height: 10px;background-color: #f4f4f4;"></div>
-<footer class="bg-secondary text-white" id="load">
-<div class="container">
-<div class="row">
-<div class="col">
-<p class="lead text-center">&copy; www.RodneyStCloud.com All Rights Reserved &nbsp | 
-<span id="demo_1" style="color: white;">
-<?php echo $date_time;?>
-</span>
-</p>
-</div>
-</div>
-</div>
-</footer>
-<div style="height: 10px;background-color: #f4f4f4;"></div>
-<!-- FOOTER ENDS -->
-<!--
-<script>
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-/*
-document.getElementById("load").onload = function () {my_time_fuction(); my_date_fuction();};
-function my_time_fuction()
-{
-var d_1 = new Date();
-var n = d_1.getMinutes();
-document.getElementById("demo_1").innerHTML = n;
-}
-function my_date_fuction()
-{
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-}
-*/
-</script>
--->
-</body>
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- Popper JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</html>
+
+
+<!----BEGINNING FOOTER AND BODY SECTION---->
+<?php require_once "includes/footer.php"; ?>
+<!-----ENDING FOOTER AND BODY SECTION------>

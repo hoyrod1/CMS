@@ -1,0 +1,15 @@
+/* GLOBAL RESET */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.reg_form {
+  padding: 10px;
+  width: 45%;
+  margin: auto;
+  background-color: lightgray;
+  border-radius: 5px;
+  box-shadow: 3px 3px 8px black;
+}

@@ -58,66 +58,14 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="author" content="BooBoo">
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Categories</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://kit.fontawesome.com/dfc9e3c3d1.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script type="text/javascript" src="javascript/js_script.js"></script>
-</head>
-<body>
-    <!-- NAV-BAR -->
-    <div style="height: 10px;background-color: #f4f4f4;"></div>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-    <div class="container">
 
-        <a href="#" class="navbar-brand"> www.RodneyStCloud.com</a>
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse" id="navbarcollapseCMS">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a href="myprofile.php" class="nav-link">
-                        <i class="fas fa-user text-success"></i> My Profile
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="dashboard.php" class="nav-link">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a href="post.php" class="nav-link">Post</a>
-                </li>
-                <li class="nav-item">
-                    <a href="categories.php" class="nav-link">Categories</a>
-                </li>
-                <li class="nav-item">
-                    <a href="admin.php" class="nav-link">Manage Admins</a>
-                </li>
-                <li class="nav-item">
-                    <a href="comments.php" class="nav-link">Comments</a>
-                </li>
-                <li class="nav-item">
-                    <a href="blog_post.php?page=1" class="nav-link">Live Blog</a>
-                </li>
-            </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a href="logout.php" class="nav-link text-danger">
-                <i class="fas fa-user-times"></i> Log Out</a>
-            </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div style="height: 10px;background-color: #f4f4f4;"></div>
-  <!-- NAV BAR END-->
+<!------------BEGGINING  HTML-NAV SECTION ------------>
+<?php 
+$title = "Category Page";
+require_once "includes/nav_links.php"; 
+?>
+<!-------------ENDING HTML-NAV SECTION---------------->
+
   <hr>
   <!-- HEADER BEGINS-->
   <header class="bg-dark text-white py-3">
@@ -140,8 +88,8 @@ if (isset($_POST['submit'])) {
             <div class="row">
             <div class="offset-lg-1 col-md-10 bg-light" style="min-height:500px;">
             <?php 
-                echo error_message();
-                echo success_message();
+                echo errorMessage();
+                echo successMessage();
             ?>
          <!----------------BEGINNING OF FORM----------------------->
          <form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
@@ -229,54 +177,7 @@ if (isset($_POST['submit'])) {
   </section>
 <!-- MAIN AREA ENDS-->
 <hr>
-<!-- FOOTER BEGIN -->
-<div style="height: 10px;background-color: #f4f4f4;"></div>
-  <footer class="bg-secondary text-white" id="load">
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <p class="lead text-center">
-            &copy; www.RodneyStCloud.com All Rights Reserved &nbsp | &nbsp
-            <span id="demo_1" style="color: white;">
-                      <?php 
-                            $dateTime = date('m/d/Y H:i:s', strtotime($date_time));
-                            echo $dateTime; 
-                        ?>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </footer>
-  <div style="height: 10px;background-color: #f4f4f4;"></div>
-</body>
-<!-- FOOTER ENDS -->
-<!--
-<script>
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-/*
-document.getElementById("load").onload = function () {my_time_fuction(); my_date_fuction();};
-function my_time_fuction()
-{
-var d_1 = new Date();
-var n = d_1.getMinutes();
-document.getElementById("demo_1").innerHTML = n;
-}
-function my_date_fuction()
-{
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-}
-*/
-</script>
--->
-  <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <!-- Popper JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</html>
+
+<!----BEGINNING FOOTER AND BODY SECTION---->
+<?php require_once "includes/footer.php"; ?>
+<!-----ENDING FOOTER AND BODY SECTION------>

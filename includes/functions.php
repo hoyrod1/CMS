@@ -101,7 +101,29 @@ function disapprovedCommentCount($table, $post_id)
 
 //=====================================================================//
 /**
- * The funtion returns the user data if the user exist
+ * The funtion returns the admin data if admin exist
+ * 
+ * @param string $username This param has the admin username submitted
+ * 
+ * @access public
+ * 
+ * @return mixed
+ */
+function getAdmin($username)
+{
+    $connect = new Database("localhost", "root", "root", "cms");
+    $sql = "SELECT * FROM admin WHERE username = :username";
+    $stmt = $connect->conn()->prepare($sql);
+    $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+    $stmt->execute();
+    $results = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $results;
+}
+//=====================================================================//
+
+//=====================================================================//
+/**
+ * The funtion returns the user_record data if the user exist
  * 
  * @param string $username This param has the username submitted
  * 
@@ -136,8 +158,8 @@ function loginAttempt($username, $password)
 {
     $connect = new Database("localhost", "root", "root", "cms");
 
-    $sql_login = 'SELECT * FROM user_record 
-                  WHERE username = :uSernAme AND password = :pAsswOrd LIMIT 1';
+    $sql_login = "SELECT * FROM admin 
+                  WHERE username = :uSernAme AND password = :pAsswOrd LIMIT 1";
     $pre_login = $connect->conn()->prepare($sql_login);
     $pre_login->bindValue(':uSernAme', $username);    
     $pre_login->bindValue(':pAsswOrd', $password);
@@ -208,7 +230,7 @@ function usernameExist($username)
 {
     $connect = new Database("localhost", "root", "root", "cms");
 
-    $sql  = 'SELECT username FROM user_record WHERE username = :userName';
+    $sql  = "SELECT username FROM admin WHERE username = :userName";
     $stmt = $connect->conn()->prepare($sql);
     $stmt->bindValue(':userName', $username);
     $stmt->execute();

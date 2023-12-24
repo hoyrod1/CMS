@@ -1,0 +1,27 @@
+/* GLOBAL RESET */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.contact_container {
+  margin: auto;
+  height: 100%;
+  width: 75%;
+  box-shadow: 10px 10px 5px grey;
+  padding: 10px;
+}
+
+.contact_h2 {
+  padding: 15px 5px 15px 50px;
+  color: white;
+}
+
+.contact_p {
+  padding: 30px;
+}
+
+.contact_i {
+  color: white;
+}

@@ -11,7 +11,7 @@
  * @link     https://cms/includes/create_user_table.php
  */
 
-require_once "includes/db_conn.php";
+require_once "db_conn.php";
 
 //====================================================================//
 /**
@@ -161,8 +161,8 @@ function loginAttempt($username, $password)
     $sql_login = "SELECT * FROM admin 
                   WHERE username = :uSernAme AND password = :pAsswOrd LIMIT 1";
     $pre_login = $connect->conn()->prepare($sql_login);
-    $pre_login->bindValue(':uSernAme', $username);    
-    $pre_login->bindValue(':pAsswOrd', $password);
+    $pre_login->bindValue(':uSernAme', $username, PDO::PARAM_STR);    
+    $pre_login->bindValue(':pAsswOrd', $password, PDO::PARAM_STR);
     $pre_login->execute();
 
     $execute_results  = $pre_login->rowcount();
@@ -208,7 +208,6 @@ function redirect($new_url)
  */
 function testInput($data) 
 {
-    // $data = htmlentities($data, ENT_QUOTES, 'UTF-8');
     $data = trim($data);
     $data = stripcslashes($data);
     $data = htmlspecialchars($data);
@@ -232,7 +231,7 @@ function usernameExist($username)
 
     $sql  = "SELECT username FROM admin WHERE username = :userName";
     $stmt = $connect->conn()->prepare($sql);
-    $stmt->bindValue(':userName', $username);
+    $stmt->bindValue(':userName', $username, PDO::PARAM_STR);
     $stmt->execute();
 
     $results = $stmt->rowcount();

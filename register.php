@@ -219,12 +219,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                                         :photO)";
         
             $prepare_stmt  = $database->conn()->prepare($sql);
-            $prepare_stmt->bindValue(':namE', $name);
-            $prepare_stmt->bindValue(':emaiL', $email);
-            $prepare_stmt->bindValue(':contact_nuM', $contact_num);
-            $prepare_stmt->bindValue(':usernamE', $username);
-            $prepare_stmt->bindValue(':passworD', $hashed_password);
-            $prepare_stmt->bindValue(':photO', $photo);
+            $prepare_stmt->bindValue(':namE', $name, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':emaiL', $email, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':contact_nuM', $contact_num, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':usernamE', $username, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':passworD', $hashed_password, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':photO', $photo, PDO::PARAM_STR);
             $execute = $prepare_stmt->execute();
         
             if ($execute) {

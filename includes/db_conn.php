@@ -32,6 +32,8 @@ class Database
     private string $_dbname;
     //*===========ENDING OF PRIVATE PROPERTIES FOR DATABASE CONNECTION============*//
 
+    
+
     //*=====BEGINNING OF CONSTRUCTOR FOR DATABASE PROPERTY ASSIGNMENT========*//
     /**
      * This constructor assigns the database connecton values
@@ -53,6 +55,8 @@ class Database
         $this->_dbname     = $dn;
     }
     //*========ENDING OF CONSTRUCTOR FOR DATABASE PROPERTY ASSIGNMENT===========*//
+
+
 
     //*=================BEGINNING OF DATABASE CONNECTION====================*//
     /**

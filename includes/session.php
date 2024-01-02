@@ -12,7 +12,6 @@
  */
 session_start();
 
-
 //=====================================================================//
 /**
  * This function returns a session error message

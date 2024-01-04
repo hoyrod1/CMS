@@ -26,14 +26,14 @@ $mail->SMTPAuth = true;
 // $mail->SMTPDebug  = SMTP::DEBUG_SERVER;
 $mail->SMTPDebug  = SMTP::DEBUG_OFF;
 
-$mail->Host       = "smtp.gmail.com";
+$mail->Host       = "";
 
 $mail->SMTPSecure = "ssl";
 // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-$mail->Port       = "465";
-$mail->Username   = "hoyrod1@gmail.com";
-$mail->Password   = "gvuv mghj igxj ddsp";
+$mail->Port       = "";
+$mail->Username   = "";
+$mail->Password   = "";
 
 $mail->isHTML(true);
 

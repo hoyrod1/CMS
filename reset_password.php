@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 if ($reset_email_result === false) {
                     $_SESSION['error_message'] = "Something went wrong, try again";
                 } else {
-                    $_SESSION['success_message'] = "Email sent, reset password";
+                    $_SESSION['success_message'] = "Check email to reset password";
                 }
             }
         }

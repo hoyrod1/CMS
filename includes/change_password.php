@@ -14,7 +14,58 @@ require_once "session.php";
 require_once "functions.php";
 require_once "../includes/date_time.php";
 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']) && isset($_POST['token'])) {
+
+    $post_token = $_POST['token'];
+    $url = "change_password.php?token=$post_token";
+    
+    $password         = testInput($_POST['password']);
+    $confirm_password = testInput($_POST['confirm_password']);
+    
+    if (empty($password) && empty($confirm_password)) {
+        $_SESSION['error_message'] = "Please enter both fields";
+        redirect($url);
+    } elseif (empty($password)) {
+        $_SESSION['error_message'] = "Please enter your password";
+        redirect($url);
+    } elseif (empty($confirm_password)) {
+        $_SESSION['error_message'] = "Please confirm your password";
+        redirect($url);
+    } elseif ($password  !== $confirm_password) {
+        $_SESSION['error_message'] = "The passwords do not match";
+        redirect($url);
+    } elseif (strlen($password) < 6) {
+        $_SESSION['error_message'] = "Your password must contain at least 6 characters";
+        redirect($url);
+    } elseif (strlen($password) > 32) {
+        $_SESSION['error_message'] = "Your password cant contain more than 32 characters";
+        redirect($url);
+    } elseif (!preg_match("/[0-9]/", $password)) {
+        $_SESSION['error_message'] = "Your password must contain one number";
+        redirect($url);
+    } elseif (!preg_match("/[a-zA-Z]/", $password)) {
+        $_SESSION['error_message'] = "Your password must contain at one letter";
+        redirect($url);
+    } else {
+        include_once "process_reset_password.php";
+    } 
+
+    //---------------------------------------------------------------------------//
+    // VALIDATION FOR REQUIRED UPPER CASE AND LOWER CASE LETTERS IN THE PASSWORD //
+    // elseif (!preg_match("/(?=.*[A-Z])/", $password)) {
+    //     $_SESSION['error_message'] = "Your password must contain at least one uppercase";
+    //     redirect($url);
+    // } elseif (!preg_match("/(?=.*[a-z])/", $password)) {
+    //     $_SESSION['error_message'] = "Your password must contain at least one lowercase";
+    //     redirect($url);
+    // }
+    //---------------------------------------------------------------------------//
+
+}
+
 if (!isset($_GET["token"])) {
+    $_SESSION['error_message'] = "Can not change password without token";
     redirect('../reset_password.php');
 }
 
@@ -125,14 +176,7 @@ if ($expeiration_time <= time()) {
     <?php 
       echo errorMessage(); 
       echo successMessage(); 
-    ?><!-- NAME ERROR SHORT HAND IF STATEMENT -->
-    <?php if (isset($emptyEmailErr)) :?> 
-     <div style="width:300px;height:20px;margin:auto;color:red;font-weight: bold;"> <?php echo $emptyEmailErr; ?> </div> 
-    <?php endif; ?>
-    <?php if (isset($emailErr)) :?> 
-     <div style="width:300px; height: 20px; margin: auto; color:red;font-weight: bold;"> <?php echo $emailErr; ?> </div> 
-    <?php endif; ?>
-    <br>
+    ?>
 <!----------------------- MAIN AREA BEGINS --------------------------->
 <section class="container py-2 mb-4">
   <div class="row">
@@ -143,7 +187,7 @@ if ($expeiration_time <= time()) {
         </div>
 <!------------------------- FORM BEGINS ------------------------------>
 <div class="card-body bg-dark">
-  <form class="" action="process_reset_password.php" method="post">
+  <form class="" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
 
     <div class="form-group">
       <label for="password">

@@ -5,10 +5,10 @@
  * Footer for CMS
  * 
  * @category CMS
- * @package  Footer
+ * @package  Footer_Configuration_Page
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/footer.php
+ * @link     https://cms/incudes/footer.php
  */
 ?>
 
@@ -32,33 +32,14 @@
 <!-- FOOTER ENDS -->
 </body>
 <!-- BODY AREA ENDS-->
-<!--
-<script>
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-/*
-document.getElementById("load").onload = function () {my_time_fuction(); my_date_fuction();};
-function my_time_fuction()
-{
-var d_1 = new Date();
-var n = d_1.getMinutes();
-document.getElementById("demo_1").innerHTML = n;
-}
-function my_date_fuction()
-{
-var d_1 = new Date();
-var d = d_1.toDateString();
-document.getElementById("demo_2").innerHTML = d;
-}
-*/
-</script>
--->
 
 <!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
 <!-- Popper JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+</script>
 <!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+</script>
 </html>

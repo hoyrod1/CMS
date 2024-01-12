@@ -5,10 +5,10 @@
  * Session Page for CMS registration
  * 
  * @category CMS
- * @package  Session_Configuration
+ * @package  Session_Configuration_Page
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/session.php
+ * @link     https://cms/incudes/session.php
  */
 session_start();
 

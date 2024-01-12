@@ -10,7 +10,7 @@
  * @license  STC Media inc
  * @link     https://cms/feature.php
  */
-
+require_once "includes/session.php";
 require "includes/date_time.php";
 
 ?>
@@ -18,7 +18,7 @@ require "includes/date_time.php";
 <!------------------------ OPENING HTML TAGS AND NAV LINKS ------------------------>
       <?php 
         $title = "Feature Page";
-        require_once "includes/unlogged_nav_link.php"; 
+        require_once "includes/reg_log_nav_link.php"; 
         ?>
 <!------------------------ CLOSING HTML TAGS AND NAV LINKS ------------------------>
 

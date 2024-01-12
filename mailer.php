@@ -8,7 +8,7 @@
  * @package  Mailer_Page_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/reset_password.php
+ * @link     https://cms/mailer.php
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -26,14 +26,14 @@ $mail->SMTPAuth = true;
 // $mail->SMTPDebug  = SMTP::DEBUG_SERVER;
 $mail->SMTPDebug  = SMTP::DEBUG_OFF;
 
-$mail->Host       = "";
+$mail->Host       = "smtp.gmail.com";
 
 $mail->SMTPSecure = "ssl";
 // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-$mail->Port       = "";
-$mail->Username   = "";
-$mail->Password   = "";
+$mail->Port       = "465";
+$mail->Username   = "hoyrod1@gmail.com";
+$mail->Password   = "gvuv mghj igxj ddsp";
 
 $mail->isHTML(true);
 

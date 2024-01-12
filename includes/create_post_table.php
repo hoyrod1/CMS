@@ -5,7 +5,7 @@
  * Create Post Table Page for CMS
  * 
  * @category CMS
- * @package  Database_Table_Configuration
+ * @package  Create_Post_Table_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
  * @link     https://cms/includes/create_post_table.php

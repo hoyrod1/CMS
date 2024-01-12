@@ -10,11 +10,15 @@
  * @license  STC Media inc
  * @link     https://cms/registration.php
  */
-
 require_once "includes/session.php";
 require_once "includes/db_conn.php";
 require_once "includes/functions.php";
 require_once "includes/date_time.php";
+
+if (isset($_SESSION['user_name'])) {
+    redirect('dashboard.php');
+    $_SESSION["success_message"] = $_SESSION['admin_name'] . ' you are already registered';
+}
 
 // define $_POST variables and set to empty values
 $name         = "";
@@ -26,13 +30,17 @@ $con_password = "";
 $phot_err     = "";
 
 // define error variables and set to empty values
-$nameErr     = "";
-$emailErr    = "";
-$contactErr  = "";
-$usernameErr = "";
-$passwordErr = "";
-$confpassErr = "";
-$passNoMatchErr = "";
+$nameErr          = "";
+$emailErr         = "";
+$contactErr       = "";
+$usernameErr      = "";
+$passwordErr      = "";
+$passwordErr_6    = "";
+$passwordErr_32   = "";
+$passwordErr_n    = "";
+$passwordErr_l    = "";
+$confpassErr      = "";
+$passNoMatchErr   = "";
 
 // define form data and image error array and set to empty values
 $formDataErr = [];
@@ -97,9 +105,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         // and one character that is NOT alphanumeric
         // a string with any characters between 6 and 32 characters long
         // /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{6,32}$/
-        if (!preg_match("/^(?=.*?[0-9])(?=.*?[A-Za-z]).{6,32}$/", $password)) {
-            $passwordErr = "Invalid password";
-            array_push($formDataErr, $passwordErr);
+        // if (!preg_match("/^(?=.*?[0-9])(?=.*?[A-Za-z]).{6,32}$/", $password)) {
+        //     $passwordErr = "Invalid password";
+        //     array_push($formDataErr, $passwordErr);
+        // }
+        if (strlen($password) < 6) {
+            $passwordErr_6 = "Your password must contain at least 6 characters";
+            array_push($formDataErr, $passwordErr_6);
+        } elseif (strlen($password) > 32) {
+            $passwordErr_32 = "Your password cant contain more than 32 characters";
+            array_push($formDataErr, $passwordErr_32);
+        } elseif (!preg_match("/[0-9]/", $password)) {
+            $passwordErr_n = "Your password must contain one number";
+            array_push($formDataErr, $passwordErr_n);
+        } elseif (!preg_match("/[a-zA-Z]/", $password)) {
+            $passwordErr_l = "Your password must contain at one letter";
+            array_push($formDataErr, $passwordErr_l);
         }
     }
 
@@ -144,12 +165,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             $execute = $prepare_stmt->execute();
         
             if ($execute) {
-                $test_db = null;
+                $database = null;
                 $_SESSION["success_message"] = "You have registered, please login";
                 redirect("login.php");
         
             } else {
-                $test_db = null;
+                $database = null;
                 $_SESSION["error_message"] = "Record has not been submitted";
                 // echo '<span class="error">Record has not been submitted!"</span>';
             }
@@ -228,39 +249,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             $execute = $prepare_stmt->execute();
         
             if ($execute) {
-                $test_db = null;
+                $database = null;
                 $_SESSION["success_message"] = "You have registered, please login";
                 redirect("login.php");
         
             } else {
-                $test_db = null;
+                $database = null;
                 $_SESSION["error_message"] = "Record has not been submitted";
             }
             // ------------------------------------------------------------------- //
         }
     }
-    // --------------------------- TEST CODE -------------------------- //
-    // echo "<pre>";
-    // print_r($verify_image);
-    // echo "</pre>";
-    // exit;
-    // ---------------------------------------------------------------- //
-    // VIEW THE IMAGE DETAILS IN THE $_FILE SUPER GLOBAL
-    // echo "<pre>";
-    // print_r($_FILES);
-    // echo "</pre>";
-    // exit;
-    // ---------------------------------------------------------------- //
-    // echo "<pre>";
-    // print_r($photoErr);
-    // echo "</pre>";
-    // exit;
-    // ---------------------------------------------------------------- //
-    // echo "<pre>";
-    // print_r($formDataErr);
-    // echo "</pre>";
-    // exit;
-    // ---------------------------------------------------------------- //
 
 }
 
@@ -269,7 +268,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
       <!---------------------- OPENING HTML TAGS AND NAV LINKS --------------------->
       <?php 
         $title = "Registratrion Page";
-        require_once "includes/unlogged_nav_link.php"; 
+        require_once "includes/reg_log_nav_link.php"; 
         ?>
       <!---------------------- CLOSING HTML TAGS AND NAV LINKS --------------------->
 
@@ -283,37 +282,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
           <fieldset>
             <label for="name" class="fieldinput">Name:</label>
             <br>
-            <input type="text" id="name" name="name" value="<?php echo $name;?>">
+            <input type="text" id="name" name="name" value="<?php echo $name;?>" required>
             <span class="error">* <?php echo $nameErr;?></span>
             <br>
 
             <label for="email" class="fieldinput">email:</label>
             <br>
-            <input type="text" id="email" name="email" value="<?php echo $email;?>">
+            <input type="text" id="email" name="email" value="<?php echo $email;?>" required>
             <span class="error">* <?php echo $emailErr;?></span>
             <br>
             <!---------------------------------------------------------------------->
             <label for="contact_num" class="fieldinput">Number:</label>
             <br>
-            <input type="text" id="contact_num" name="contact_num" value="<?php echo $contact_num;?>">
+            <input type="text" id="contact_num" name="contact_num" value="<?php echo $contact_num;?>" required>
             <span class="error">* <?php echo $contactErr;?></span>
             <br>
             <!---------------------------------------------------------------------->
             <label for="username" class="fieldinput">Username:</label>
             <br>
-            <input type="text" id="username" name="username" value="<?php echo $username;?>">
+            <input type="text" id="username" name="username" value="<?php echo $username;?>" required>
             <span class="error">* <?php echo $usernameErr;?></span>
             <br>
             <!---------------------------------------------------------------------->
             <label for="password" class="fieldinput">Password:</label>
             <br>
-            <input type="password" id="password" name="password" value="<?php echo $password;?>">
-            <span class="error">* <?php echo $passwordErr;?></span>
+            <input type="password" id="password" name="password" value="<?php echo $password;?>" required>
+            <span class="error">* <?php echo $passwordErr ." &nbsp; ". $passwordErr_6 ." &nbsp; ". $passwordErr_32 ." &nbsp; ". $passwordErr_n ." &nbsp; ". $passwordErr_l;?></span>
             <br>
             <!---------------------------------------------------------------------->
             <label for="confirm_pass" class="fieldinput">Confirm Password:</label>
             <br>
-            <input type="password" id="confirm_pass" name="confirm_pass" value="<?php echo $con_password;?>">
+            <input type="password" id="confirm_pass" name="confirm_pass" value="<?php echo $con_password;?>" required>
             <span class="error">* <?php echo $confpassErr ." &nbsp; ". $passNoMatchErr;?></span>
             <br>
             <br>

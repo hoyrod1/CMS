@@ -18,8 +18,19 @@ require_once "includes/date_time.php";
 $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
+// define $_POST variables and set to empty values
+$myProfile_name         = "";
+$myProfile_title        = "";
+$myProfile_bio          = "";
+$myProfile_photo        = "";
+
 //BEGINNING OF FETCHING EXISTING ADMIN DATA
-$admin_id          = $_SESSION["user_id"];
+$admin_id          = "";
+if (isset($_SESSION["user_id"])) {
+    $admin_id = $_SESSION["user_id"];
+} elseif (isset($_COOKIE["admin_id"])) {
+    $admin_id = $_COOKIE["admin_id"];
+}
 
 $myProfile_connect = new Database("localhost", "root", "root", "cms");
 $myProfile_sql     = "SELECT * FROM admin WHERE id = '$admin_id'";
@@ -27,11 +38,11 @@ $myProfile_stmt    = $myProfile_connect->conn()->query($myProfile_sql);
 
 
 while ($myprofile_row = $myProfile_stmt->fetch()) {
-    $myProfile_username    = $myprofile_row['username'];
-    $myProfile_name        = $myprofile_row['admin_name'];
-    $myProfile_title       = $myprofile_row['admin_headline'];
-    $myProfile_bio         = $myprofile_row['admin_bio'];
-    $myProfile_photo       = $myprofile_row['admin_photo'];
+    $myProfile_username    = htmlspecialchars($myprofile_row['username']);
+    $myProfile_name        = htmlspecialchars($myprofile_row['admin_name']);
+    $myProfile_title       = htmlspecialchars($myprofile_row['admin_headline']);
+    $myProfile_bio         = htmlspecialchars($myprofile_row['admin_bio']);
+    $myProfile_photo       = htmlspecialchars($myprofile_row['admin_photo']);
 }
 
 //ENDING OF FETCHING EXISTING ADMIN DATA
@@ -214,7 +225,7 @@ if (isset($_POST['submit'])) {
 <!--  HTML-NAV SECTION -->
 <?php 
 $title = "My Profile Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!--  HTML-NAV SECTION -->
 
@@ -226,11 +237,11 @@ require_once "includes/nav_links.php";
       <div class="col-md-12 ">
           <h1>
               <i class="fas fa-user mr-2 text-success"> 
-                  <?php echo htmlspecialchars($myProfile_username); ?>'s Profile 
+                  <?php echo $myProfile_name ; ?>'s Profile 
               </i>
           </h1>
-          <small style="font-weight: bold;text-decoration: underline;">
-              <?php echo htmlspecialchars($myProfile_title); ?>
+          <small style="font-weight:bold;float:right;font-size:20px;margin-right:30%;">
+              <?php echo $myProfile_title ; ?>
           </small>
       </div>
     </div>
@@ -245,13 +256,15 @@ require_once "includes/nav_links.php";
       <div class="col-md-3" style="min-height:500px;">
         <div class="card">
           <div class="card-header bg-dark text-white">
-              <h3 style="text-align: center;text-decoration: underline;"><?php echo htmlspecialchars($myProfile_name); ?></h3>
+            <h3 style="text-align: center;">
+              <?php echo $myProfile_name ; ?>
+            </h3>
           </div>
           <div class="card-body" style="background-color: lightgrey;">
-              <img src="<?php echo 'images/'. htmlspecialchars($myProfile_photo); ?>" class="block img-fluid" height="225px" width="205px">
+              <img src="<?php echo 'images/'. $myProfile_photo ; ?>" class="block img-fluid" height="225px" width="205px">
           </div>
-          <div class="bg-dark text-white" style="padding: 5px;">
-              <?php echo htmlspecialchars($myProfile_bio); ?>
+          <div class="bg-dark text-white" style="padding: 10px;">
+              <?php echo $myProfile_bio ; ?>
           </div>
        </div>
      </div>
@@ -271,10 +284,10 @@ require_once "includes/nav_links.php";
                  <!-- EDIT NAME AND INSERT NEW HEADLINE -->
                  <div class="card-body">
                      <div class="form-group">
-                         <input class="form-control" id="title" type="text" name="editName" placeholder="Enter Your Name...">
+                         <input class="form-control" id="title" type="text" name="editName" placeholder="<?php echo $myProfile_name ; ?>" required>
                      </div>
                      <div class="form-group">
-                         <input class="form-control" style="margin-bottom: 10px;" id="title" type="text" name="editHeadLine" placeholder="Enter HeadLine...">
+                         <input class="form-control" style="margin-bottom: 10px;" id="title" type="text" name="editHeadLine" placeholder="<?php echo $myProfile_title ; ?>" required>
                          <small class="text-muted">
                              Add a Professional Headline
                          </small>
@@ -284,7 +297,7 @@ require_once "includes/nav_links.php";
                      </div>
                      <!-- ENTER BIO -->
                      <div class="form-group bg-dark">
-                         <textarea class="form-control" id="post" name="enterBio" rows="8" cols="80" placeholder="Enter Bio..."></textarea>
+                         <textarea class="form-control" id="post" name="enterBio" rows="8" cols="80" placeholder="<?php echo $myProfile_bio . ":"; ?>" required></textarea>
                      </div>
                      <!-- SELECT IMAGE INPUT-->
                      <div class="form-group py-2">
@@ -292,7 +305,7 @@ require_once "includes/nav_links.php";
                              <span style="color: white;">Select Image:</span>
                          </label>
                      <div class="custom-file">
-                         <input class="custom-file-input" type="file" name="image" id="image" value="">
+                         <input class="custom-file-input" type="file" name="image" id="image" value="<?php echo $myProfile_photo ; ?>">
                          <label class="custom-file-label" for="image"> Select Image... </label>
                      </div>
                  </div>

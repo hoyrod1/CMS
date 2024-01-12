@@ -8,7 +8,7 @@
  * @package  Change_Password_Page_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/change_password.php
+ * @link     https://cms/includes/change_password.php
  */
 require_once "session.php";
 require_once "functions.php";
@@ -29,12 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']) && isset($_P
     } elseif (empty($password)) {
         $_SESSION['error_message'] = "Please enter your password";
         redirect($url);
-    } elseif (empty($confirm_password)) {
-        $_SESSION['error_message'] = "Please confirm your password";
-        redirect($url);
-    } elseif ($password  !== $confirm_password) {
-        $_SESSION['error_message'] = "The passwords do not match";
-        redirect($url);
     } elseif (strlen($password) < 6) {
         $_SESSION['error_message'] = "Your password must contain at least 6 characters";
         redirect($url);
@@ -47,8 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit']) && isset($_P
     } elseif (!preg_match("/[a-zA-Z]/", $password)) {
         $_SESSION['error_message'] = "Your password must contain at one letter";
         redirect($url);
+    } elseif (empty($confirm_password)) {
+        $_SESSION['error_message'] = "Please confirm your password";
+        redirect($url);
+    } elseif ($password  !== $confirm_password) {
+        $_SESSION['error_message'] = "The passwords do not match";
+        redirect($url);
     } else {
-        include_once "process_reset_password.php";
+          include_once "process_reset_password.php";
     } 
 
     //---------------------------------------------------------------------------//

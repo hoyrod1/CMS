@@ -5,10 +5,10 @@
  * Unlogg_Nav_Links for CMS
  * 
  * @category CMS
- * @package  Unlogg_Nav_Links
+ * @package  Unlogg_Nav_Links_Configuration_Page
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/unlogg_nav_links.php
+ * @link     https://cms/includes/unlogg_nav_links.php
  */
 ?>
 <!DOCTYPE html>
@@ -43,7 +43,7 @@
             <a href="about.php" class="nav-link">About</a>
           </li>
           <li class="nav-item">
-            <a href="blog_post.php?page=1" class="nav-link">Blog</a>
+            <a href="blog_post.php" class="nav-link">Blog</a>
           </li>
           <li class="nav-item">
             <a href="contact.php" class="nav-link">Contact</a>
@@ -54,17 +54,31 @@
           <li class="nav-item">
             <a class="nav-link" href="service.php">Service</a>
           </li>
-          <li class="nav-item ml-5">
-            <a href="login.php" class="nav-link text-success"> 
-              <i class="fas fa-user-times"></i> Log In
-            </a>
-          </li>
+          <?php
+            if (isset($_SESSION["user_id"])) {
+                echo '
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="logout.php" class="nav-link text-danger">
+                                <i class="fas fa-user-times"></i> Log Out
+                            </a>
+                        </li>
+                    </ul>';
+            } else {
+                echo '
+                    <li class="nav-item ml-5">
+                      <a href="login.php" class="nav-link text-success"> 
+                        <i class="fas fa-user-times"></i> Log In
+                      </a>
+                    </li>';
+            }
+            ?>
         </ul>
         <!-- BEGINNING OF SEARCH FIELD-->
-        <ul style="margin-top: 10px;">
+        <ul style="margin-top: 15px;">
           <form class="form-inline d-none d-sm-block" action="search_post.php" method="" enctype="">
            <div class="form-group">
-             <input class="form-control mr-2" type="text" name="search" placeholder="Type search...">
+             <input class="form-control mr-2" type="text" name="search" placeholder="Type search..." required>
              <button class="btn btn-primary" name="search_button">Search</button>
            </div>
          </form>

@@ -26,7 +26,7 @@ if (isset($_POST['submit'])) {
     $admin            = $_SESSION['admin_name'];
     
 
-    if (empty($username) || empty($password) || empty($password)) {
+    if (empty($username) || empty($name) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "Please fill out the form";
         redirect("admin.php");
     } elseif (strlen($password) < 5) {
@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
 <!------------BEGGINING  HTML-NAV SECTION ------------>
 <?php 
 $title = "Admin Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!-------------ENDING HTML-NAV SECTION---------------->
    <!---------------------------------HEADER BEGINS-------------------------------->
@@ -110,20 +110,20 @@ require_once "includes/nav_links.php";
             <div class="card-body bg-dark">
               <div class="form-group">
                 <label for="username"><span class="label"> User Name: </span></label>
-               <input class="form-control" id="username" type="text" name="username">
+               <input class="form-control" id="username" type="text" name="username" required>
               </div>
               <div class="form-group">
                 <label for="name"><span class="label"> Name: </span></label>
-                <input class="form-control" id="name" type="text" name="name">
-                <small class="text-warning text-muted">Optional</small>
+                <input class="form-control" id="name" type="text" name="name" required>
+                <!-- <small class="text-warning text-muted">Optional</small> -->
               </div>
                 <div class="form-group">
                     <label for="password"><span class="label"> Password: </span></label>
-                    <input class="form-control" id="password" type="password" name="password">
+                    <input class="form-control" id="password" type="password" name="password" required>
                 </div>
                 <div class="form-group">
                     <label for="confirmpassword"><span class="label"> Confirm Password: </span></label>
-                    <input class="form-control" id="confirmpassword" type="password" name="confirmpassword">
+                    <input class="form-control" id="confirmpassword" type="password" name="confirmpassword" required>
                 </div>
                 <div class="row py-3">
                     <div class="col-lg-6 mb-2">
@@ -173,7 +173,7 @@ require_once "includes/nav_links.php";
             $admin_name       = $comment_rows['admin_name'];
             $admin_added_by   = $comment_rows['added_by'];
 
-            $dateTime = date('m/d/Y H:i:s', strtotime($admin_date_time));
+            $dateTime = date('m/d/Y g:i a', strtotime($admin_date_time));
 
             ?>
           <thead>

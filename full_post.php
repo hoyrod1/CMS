@@ -10,7 +10,6 @@
  * @license  STC Media inc
  * @link     https://cms/full_post.php
  */
-
 require_once "includes/session.php";
 require_once "includes/db_conn.php";
 require_once "includes/functions.php";
@@ -97,13 +96,14 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-?>
-<!-------------------------- HTML-NAV SECTION -------------------------->
-<?php 
-$title = "Full Post Page";
+
+//-------------------------- HTML-NAV SECTION --------------------------//
+$title = "Category Page";
 require_once "includes/blog_nav_links.php"; 
+//--------------------------  HTML-NAV SECTION --------------------------//
+
 ?>
-<!--------------------------  HTML-NAV SECTION -------------------------->
+
 <hr>
 <!-- CONTAINER BEGINS-->
 <div class="container">
@@ -173,14 +173,18 @@ require_once "includes/blog_nav_links.php";
           <small class="text-muted">
             <span class="text-dark">
               Category of
-              <a href="blog_post.php?category=<?php echo htmlentities($category); ?>">
+              <a href="category.php?category=<?php echo urlencode(htmlspecialchars_decode($category)); ?>">
                 <?php echo $category; ?>
               </a>
               <br> 
               Written by 
               <a href="profile.php?admin_name=<?php echo htmlentities($author); ?>">
                 <?php echo htmlentities($author); ?>
-              </a> on <?php echo htmlentities($dateTime); ?>
+              </a> on
+                <?php
+                    $dateTime = date('m/d/Y g:i a', strtotime($post_date_time));
+                    echo htmlentities($dateTime);
+                ?>
             </span>
           </small>
          <span style="float:right;font-size: 15px;" class="badge badge-dark text-white">
@@ -214,7 +218,12 @@ require_once "includes/blog_nav_links.php";
            <img class="d-sm-block img-fluid align-self-start" src="uploads/2010 Exotica Pic1.jpg" width="65">
            <div class="media-body ml-2">
              <h6 class="lead"><?php echo $comment_name; ?></h6>
-             <p class="small"><?php echo $comment_date; ?></p>
+             <p class="small">
+                <?php
+                    $dateTime = date('m/d/Y g:i a', strtotime($comment_date));
+                    echo htmlentities($dateTime); 
+                ?>
+             </p>
              <p><?php echo $comment_post; ?></p>
            </div>
          </div>
@@ -237,7 +246,7 @@ require_once "includes/blog_nav_links.php";
                       <i class="fas fa-user"></i>
                     </span>
                     </div>
-                    <input type="text" name="commenter_name" value="" placeholder="Name" class="form-control">
+                    <input type="text" name="commenter_name" value="" placeholder="Name" class="form-control" required>
                   </div>
                 </div>
                 <div class="form-group">
@@ -247,14 +256,14 @@ require_once "includes/blog_nav_links.php";
                       <i class="fas fa-envelope"></i>
                     </span>
                   </div>
-                  <input type="email" name="commenter_email" value="" placeholder="Email" class="form-control">
+                  <input type="email" name="commenter_email" value="" placeholder="Email" class="form-control" required>
                 </div>
               </div>
               <div class="form-group">
-                <textarea name="commenter_thoughts" class="form-control" rows="6" cols="80"></textarea>
+                <textarea name="commenter_thoughts" class="form-control" rows="6" cols="80" required></textarea>
               </div>
               <div class="">
-                <button type="submit" name="submit" class="btn btn-primary"> 
+                <button type="submit" name="submit" class="btn btn-primary btn-block"> 
                   Submit
                 </button>
               </div>
@@ -286,31 +295,61 @@ require_once "includes/blog_nav_links.php";
             </div>
           </div>
           <br>
-          <div class="card">
-            <div class="card-header bg-dark text-light">
-              <h2 class="lead">Sign Up</h2>
-            </div>
-            <div class="card-body" style="background-color:#666699;">
-              <button type="button" class="btn btn-success btn-block text-center text-white mb-3" name="button">
-                Join The Forum
-              </button>
-              <a href="login.php" class="text-white">
-                <button type="button" class="btn btn-danger btn-block text-center" name="button">
-                  Login
-                </button>
-              </a>
-            <div class="input-group mt-3 mb-3">
-            <form class="" action="full_post.php?id=<?php echo $full_post_id; ?>" method="post">
-             <div class="input-group-append">
-               <input type="text" name="email" class="form-control mr-2" placeholder="Enter Your Email">
-               <button type="submit" name="email_button" class="btn btn-primary btn-small text-center text-white">
-                 Submit
-               </button>
-             </div>
-            </form>
-          </div>
-        </div>
-        </div> 
+            <?php 
+            if (isset($_SESSION["user_id"])) {
+                echo '
+                <div class="card">
+                  <div class="card-header bg-dark text-light">
+                    <h2 class="lead">
+                      <center>
+                        Hello  &nbsp;' . $_SESSION['admin_name'] . 
+                     '</center>
+                    </h2>
+                  </div>
+                  <div class="card-body" style="background-color:#666699;">
+                    <a href="dashboard.php" class="text-white">
+                      <button type="button" class="btn btn-success btn-block text-center text-white mb-3" name="button">
+                        Return to the dashboard
+                      </button>
+                    </a>
+                    <a href="logout.php" class="text-white">
+                      <button type="button" class="btn btn-danger btn-block text-center" name="log_button">
+                        Logout
+                      </button>
+                    </a>
+                  </div>
+                </div> ';
+            } else {
+                echo '
+                <div class="card">
+                  <div class="card-header bg-dark text-light">
+                    <h2 class="lead"><center>Sign Up</center></h2>
+                  </div>
+                  <div class="card-body" style="background-color:#666699;">
+                    <a href="blog_post.php" class="text-white">
+                      <button type="button" class="btn btn-success btn-block text-center text-white mb-3" name="button">
+                        Return to the blog
+                      </button>
+                    </a>
+                    <a href="login.php" class="text-white">
+                      <button type="button" class="btn btn-danger btn-block text-center" name="button">
+                        Login
+                      </button>
+                    </a>
+                    <div class="input-group mt-3 mb-3">
+                      <form class="" action="full_post.php?id=<?php echo $full_post_id; ?>" method="post">
+                        <div class="input-group-append">
+                          <input type="text" name="email" class="form-control mr-2" placeholder="Enter Your Email" required>
+                          <button type="submit" name="email_button" class="btn btn-primary btn-small text-center text-white">
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div> ';
+            }
+            ?>
         <br>
         <div class="card">
           <div class="card-header bg-info text-white">
@@ -325,8 +364,9 @@ require_once "includes/blog_nav_links.php";
             while ($cat_row = $sql_stmt->fetch()) {
                 $cat_id   = $cat_row['id'];
                 $cat_name = $cat_row['title'];
+                $cat_title = urlencode(htmlspecialchars_decode($cat_name));
                 ?>
-             <a href="blog_post.php?category=<?php echo $cat_name; ?>">
+             <a href="category.php?category=<?php echo $cat_title; ?>">
                <span class="heading text-white">
                 <?php echo $cat_name; ?>
                </span>
@@ -361,7 +401,10 @@ require_once "includes/blog_nav_links.php";
                 </h6>
               </a>
               <p class="small">
-                <?php echo htmlentities($recent_datetime); ?>
+                <?php
+                   $dateTime = date('m/d/Y g:i a', strtotime($recent_datetime));
+                   echo htmlentities($dateTime); 
+                ?>
               </p>
             </div>
          </div>

@@ -80,7 +80,7 @@ if (isset($_POST['submit'])) {
 <!--  HTML-NAV SECTION -->
 <?php 
 $title = "Create Post Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!--  HTML-NAV SECTION -->
   <hr>
@@ -118,11 +118,11 @@ require_once "includes/nav_links.php";
      <div class="card-body bg-dark">
        <div class="form-group">
          <label for="title"><span class="label"> Enter New Title: </span></label>
-         <input class="form-control" id="title" type="text" name="newpost" placeholder="Type title here...">
+         <input class="form-control" id="title" type="text" name="newpost" placeholder="Type title here..." required>
        </div>
       <!-- SELECT NEW CATEGORY -->
       <label for="categoryTitle"><span class="label"> Choose Category: </span></label>
-        <select class="form-control" id="categoryTitle" name="categoryTitle">
+        <select class="form-control" id="categoryTitle" name="categoryTitle" required>
           <option value="">Select...</option>
           <?php 
               $connect = new Database("localhost", "root", "root", "cms");
@@ -140,7 +140,7 @@ require_once "includes/nav_links.php";
       <div class="form-group py-2">
         <label for="image"><span style="color: white;">Select Image:</span></label>
           <div class="custom-file">
-            <input class="custom-file-input" type="file" name="image" id="image" value="">
+            <input class="custom-file-input" type="file" name="image" id="image" value="" required>
             <label class="custom-file-label" for="image"> Select Image... </label>
           </div>
       </div>
@@ -149,7 +149,8 @@ require_once "includes/nav_links.php";
         <label for="post">
           <span style="color: white;">Post Description:</span>
         </label>
-        <textarea name="postdesciption" class="form-control" id="post" rows="8" cols="80"></textarea>
+        <textarea name="postdesciption" class="form-control" id="post" rows="8" cols="80" required>
+        </textarea>
       </div>
       <!-- NAVIGATE BACK TO DASHBOARD AND SUBMIT BUTTON -->
       <div class="row py-3" style="margin: 0 5px 0 5px;">

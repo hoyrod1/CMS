@@ -82,7 +82,7 @@ if (isset($_POST['submit'])) {
 <!--  HTML-NAV SECTION -->
 <?php 
 $title = "Update Post Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!--  HTML-NAV SECTION -->
 

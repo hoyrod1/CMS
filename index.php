@@ -10,7 +10,7 @@
  * @license  STC Media inc
  * @link     https://cms/index.php
  */
-
+require "includes/set_cms_cookies.php";
 require "includes/date_time.php";
 
 ?>
@@ -18,7 +18,7 @@ require "includes/date_time.php";
 <!------------------------ OPENING HTML TAGS AND NAV LINKS ------------------------>
       <?php 
         $title = "Home Page";
-        require_once "includes/unlogged_nav_link.php"; 
+        require_once "includes/reg_log_nav_link.php"; 
         ?>
 <!------------------------ CLOSING HTML TAGS AND NAV LINKS ------------------------>
 
@@ -49,6 +49,17 @@ require "includes/date_time.php";
             <a href="register.php">register</a> to STC Media Inc Blog. You will be 
             able to upload photos from your experience to show the world. 
             You will be able to leave comments on the pictures.
+            <?php
+              echo "<pre>"; var_dump($_COOKIE); echo "</pre>";
+              // echo "<br>";
+              // echo $_COOKIE["visits"];
+              // echo "<br>";
+              // echo $_COOKIE["entryDateTime"];
+              // echo "<br>";
+              // echo $_COOKIE["entryPage"];
+              // echo "<br>";
+              // echo $_COOKIE["cameFrom"];
+            ?>
           </p>
        </div>
         <!----------------------------- CONTAINER ENDS ---------------------------->

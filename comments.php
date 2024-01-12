@@ -21,7 +21,7 @@ confirmLogin();
 <!----------------------  HTML-NAV SECTION ---------------------->
 <?php 
 $title = "Comment Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!----------------------  HTML-NAV SECTION ---------------------->
 
@@ -84,7 +84,7 @@ require_once "includes/nav_links.php";
             $comment_comments        = $comment_rows['comment'];
             $comment_post_id         = $comment_rows['post_id'];
 
-            $dateTime = date('m/d/Y H:i:s', strtotime($comment_date_time));
+            $dateTime = date('m/d/Y g:i a', strtotime($comment_date_time));
 
             if (strlen($dateTime) > 9) { 
                 $dateTime = substr($dateTime, 0, 8);
@@ -148,7 +148,7 @@ require_once "includes/nav_links.php";
                 $comment_comments        = $comment_rows['comment'];
                 $comment_post_id         = $comment_rows['post_id'];
 
-                $dateTime = date('m/d/Y H:i:s', strtotime($comment_date_time));
+                $dateTime = date('m/d/Y g:i a', strtotime($comment_date_time));
 
                 if (strlen($dateTime) > 9) { 
                     $dateTime = substr($dateTime, 0, 8); 

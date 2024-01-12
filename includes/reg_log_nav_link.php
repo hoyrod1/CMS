@@ -8,7 +8,7 @@
  * @package  Unlogged_Nav_Link_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/unlogged_nav_link.php
+ * @link     https://cms/incudes/unlogged_nav_link.php
  */
 ?>
 
@@ -55,7 +55,7 @@
                 <a href="about.php" class="nav-link">About</a>
               </li>
               <li class="nav-item">
-                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
+                <a href="blog_post.php" class="nav-link">Blog</a>
               </li>
               <li class="nav-item">
                 <a href="contact.php" class="nav-link">Contact</a>
@@ -66,11 +66,41 @@
               <li class="nav-item">
                 <a class="nav-link" href="service.php">Service</a>
               </li>
-              <li class="nav-item ml-5">
-                <a href="login.php" class="nav-link text-success"> 
-                  <i class="fas fa-user-times"></i> Log In
-                </a>
-              </li>
+              <?php
+
+                if ($title == "Registratrion Page") {
+                    echo '
+                        <li class="nav-item ml-5">
+                          <a href="login.php" class="nav-link text-success"> 
+                            <i class="fas fa-user-times"></i> Log In
+                          </a>
+                        </li>';
+                } elseif ($title == "Login Page") {
+                    echo '
+                        <li class="nav-item ml-5">
+                          <a href="register.php" class="nav-link text-success"> 
+                            <i class="fa-solid fa-registered">Register</i>
+                          </a>
+                        </li>';
+                } elseif (isset($_SESSION["user_id"])) {
+                    echo '
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a href="logout.php" class="nav-link text-danger">
+                                    <i class="fas fa-user-times"></i> Log Out
+                                </a>
+                            </li>
+                        </ul>';
+                } else {
+                    echo '
+                        <li class="nav-item ml-5">
+                          <a href="login.php" class="nav-link text-success"> 
+                            <i class="fas fa-user-times"></i> Log In
+                          </a>
+                        </li>';
+                }
+
+                ?>
             </ul>
           </div>
         </nav>

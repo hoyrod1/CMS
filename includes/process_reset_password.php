@@ -8,7 +8,7 @@
  * @package  Process_Reset_Password_Page_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/process_reset_password.php
+ * @link     https://cms/includes/process_reset_password.php
  */
 require_once "session.php";
 require_once "functions.php";

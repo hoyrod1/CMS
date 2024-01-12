@@ -16,15 +16,13 @@ require_once "includes/functions.php";
 require_once "includes/date_time.php";
 
 $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
-confirmLogin(); 
-?> 
+confirmLogin();
 
-<!------------BEGGINING  HTML-NAV SECTION ------------>
-<?php 
+//------------BEGGINING  HTML-NAV SECTION ------------>
 $title = "Dashboard Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php";
+//-------------ENDING HTML-NAV SECTION---------------->
 ?>
-<!-------------ENDING HTML-NAV SECTION---------------->
 
 <hr>
   <!-- HEADER BEGINS-->
@@ -114,7 +112,7 @@ require_once "includes/nav_links.php";
       <!------------------------BOTTOM LEFT SIDE START--------------------------->
       <div class="card text-center bg-dark text-white mb-3">
         <div class="card-body">
-          <h1 class="lead">Cooments</h1>
+          <h1 class="lead">Comments</h1>
             <h4 class="display-5">
             <i class="fas fa-comments"></i>
             <?php  
@@ -154,7 +152,7 @@ require_once "includes/nav_links.php";
             $post_date_time     = $post_rows['reg_date'];
             $post_author        = $post_rows['author'];
 
-            $dateTime = date('m/d/Y H:i:s', strtotime($post_date_time));
+            $dateTime = date('m/d/Y g:i a', strtotime($post_date_time));
 
             if (strlen($post_title) > 9) { 
                 $post_title = substr($post_title, 0, 8);

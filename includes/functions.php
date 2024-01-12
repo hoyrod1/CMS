@@ -11,7 +11,9 @@
  * @link     https://cms/includes/create_user_table.php
  */
 
+require_once "includes/session.php";
 require_once "db_conn.php";
+require_once "includes/cookieToken.php";
 
 //====================================================================//
 /**
@@ -46,8 +48,23 @@ function approvedCommentCount($table, $post_id)
  */
 function confirmLogin()
 {
+    $user_cookie = $_COOKIE["user"] ?? null;
     if (isset($_SESSION['user_name'])) {
         return true;
+    } elseif ($user_cookie && strstr($user_cookie, ":")) {
+        $token_parts  = explode(":", $user_cookie);
+        $token_key    = $token_parts[0];
+        $token_value  = $token_parts[1];
+        $token_result = getCookieToken($token_key);
+        if ($token_result) {
+            $tokenValue = $token_result["token_value"];
+            if ($token_value == $tokenValue) {
+                return true;
+            } else {
+                $_SESSION['error_message'] = 'Please Login!';
+                redirect('login.php');
+            }
+        }
     } else {
         $_SESSION['error_message'] = 'Please Login!';
         redirect('login.php');

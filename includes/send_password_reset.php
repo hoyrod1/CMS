@@ -8,7 +8,7 @@
  * @package  Send_Password_Reset_Page_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/send_password_reset.php
+ * @link     https://cms/includes/send_password_reset.php
  */
 
 require_once "includes/db_conn.php";

@@ -12,6 +12,7 @@
  */
 require_once "includes/session.php";
 require_once "includes/functions.php";
+require_once "includes/cookieToken.php";
 require_once "includes/date_time.php";
 
 $_SESSION['user_id']      = null;

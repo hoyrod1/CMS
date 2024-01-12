@@ -8,7 +8,7 @@
  * @package  Nav_Links
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/nav_links.php
+ * @link     https://cms/incudes/nav_links.php
  */
 ?>
 <!DOCTYPE html>
@@ -60,9 +60,7 @@
               <li class="nav-item">
                   <a href="blog_post.php" class="nav-link">Live Blog</a>
               </li>
-           </ul>
-           <ul class="navbar-nav ml-auto">
-               <li class="nav-item">
+               <li class="nav-item ml-5">
                    <a href="logout.php" class="nav-link text-danger">
                        <i class="fas fa-user-times"></i> Log Out
                    </a>

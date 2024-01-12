@@ -20,7 +20,7 @@ confirmLogin();
 
 if (isset($_POST['submit'])) {
     $categoryTitle = testInput($_POST['newtitle']);
-    $admin         = $_SESSION['user_name'];
+    $admin         = $_SESSION['admin_name'];
 
     if (empty($categoryTitle)) {
         $_SESSION['error_message'] = "Please fill out the form";
@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
 <!------------BEGGINING  HTML-NAV SECTION ------------>
 <?php 
 $title = "Category Page";
-require_once "includes/nav_links.php"; 
+require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!-------------ENDING HTML-NAV SECTION---------------->
 
@@ -104,7 +104,7 @@ require_once "includes/nav_links.php";
                           Category Title:
                       </span>
                   </label>
-                  <input class="form-control" id="title" type="text" name="newtitle" placeholder="Type title here...">
+                  <input class="form-control" id="title" type="text" name="newtitle" placeholder="Type title here..." required>
               </div>
               <div class="row py-3">
                   <div class="col-lg-6 mb-2">
@@ -158,7 +158,7 @@ require_once "includes/nav_links.php";
                   <td><?php echo $category_title; ?></td>
                   <td>
                       <?php 
-                            $dateTime = date('m/d/Y H:i:s', strtotime($date_time));
+                            $dateTime = date('m/d/Y g:i a', strtotime($date_time));
                             echo $dateTime; 
                         ?>
                   </td>

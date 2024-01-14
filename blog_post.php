@@ -17,6 +17,7 @@ require_once "includes/date_time.php";
 
 ?>
 <?php
+//--------------INSERT EMAIL IF EMAIL HAS BEEN POSTED--------------------------//
 if (isset($_POST["email_button"])) {
     
     if (!empty($_POST["email"])) {
@@ -48,7 +49,9 @@ if (isset($_POST["email_button"])) {
         redirect('blog_post.php');
     }
 }
-//-------------------------- HTML-NAV SECTION --------------------------//
+//--------------------------------------------------------------------------------//
+
+//------------------------------- HTML-NAV SECTION -------------------------------//
 $title = "Blog Post Page";
 require_once "includes/blog_nav_links.php"; 
 //--------------------------  HTML-NAV SECTION --------------------------> 
@@ -72,8 +75,9 @@ require_once "includes/blog_nav_links.php";
         </h1>
         <?php 
         $connect   = new Database("localhost", "root", "root", "cms");
-        //QUERY WHEN SEARCH PARAMETER IS SET//
+        //---------------- QUERY WHEN SEARCH PARAMETER IS SET ----------------//
         if (isset($_GET["search_button"])) {
+
             $search_field    = testInput($_GET["search"]);
             $sql_search      = "SELECT * FROM post 
 						                    WHERE title LIKE :Search OR 
@@ -83,16 +87,21 @@ require_once "includes/blog_nav_links.php";
             $stmt_post = $connect->conn()->prepare($sql_search);
             $stmt_post->bindValue(':Search', '%'.$search_field.'%');
             $stmt_post->execute();
+
         } elseif (isset($_GET['page'])) {
-            //QUERY SET WHEN PAGE PARAMETER IS SET FOR PAGINATION//
+            
+            //---------------- PAGINATION FORMULAR STARTS HERE ----------------//
+            //GET THE $_GET['page'] PARAMETER VALUE FROM THE URL FOR PAGINATION//
             $page = $_GET['page'];
 
-            if ($page < 1 || $page = 0) {
+            if ($page < 1 || $page == 0) {
                 $page_num = 0;
 
             } else {
                 //  PAGINATION ERROR WAS $page_num = -4 FIXED WITH MATH OPERATION  //
                 $page = $_GET['page'];
+                // ex.1 $page = 1 (1*4)-4= 0 so the query LIMIT will be 0, 4
+                // ex.2 $page = 2 (2*4)-4= 4 so the query LIMIT will be 4, 4
                 $page_num = ($page * 4) - 4;
             }
 
@@ -133,7 +142,7 @@ require_once "includes/blog_nav_links.php";
             ?>
            <div class="card">
              <!-- <dive style="width:250px; margin:auto; padding:5px; border: solid 4px #666699;"> -->
-             <img src="<?php echo 'uploads/'.htmlentities($image); ?>" max-height="300px" class="img-fluid card-img-top">
+             <img src="<?php echo 'images/'.htmlentities($image); ?>" height="200px" class="img-fluid card-img-top">
              <!--</div> -->
              <div class="card-body">
                <h4 style="color: purple;"> 
@@ -172,8 +181,8 @@ require_once "includes/blog_nav_links.php";
         <?php } ?>
         <!---------------------------PAGINATION LINKS BEGIN------------------------->
         <nav>
-          <ul class="pagination pagination-md">
-            <!--THE BEGINNING OF PREVIOUS PAGE LINK-->
+          <ul class="pagination pagination-lg">
+            <!-----------------THE BEGINNING OF PREVIOUS PAGE LINK------------------>
               <?php if (isset($page) && !empty($page)) { 
                     if ($page > 1) { 
                         ?>
@@ -186,7 +195,9 @@ require_once "includes/blog_nav_links.php";
                     }
               }
                 ?>
-            <!--THE ENDING OF PREVIOUS PAGE LINK-->
+            <!-------------------THE ENDING OF PREVIOUS PAGE LINK------------------->
+
+            <!---------------THE BEGINNING OF PAGINATION NUMBER LINK---------------->
             <?php  
               $connect_p        = new Database("localhost", "root", "root", "cms");
               $sql_p            = "SELECT COUNT(*) FROM post";
@@ -199,7 +210,6 @@ require_once "includes/blog_nav_links.php";
             for ($i = 1; $i <= $final_page_count; $i++) {
                 if (isset($page)) {
                     $page = $_GET['page'];
-                    //THE BEGINNING OF PAGINATION LINK//
                     if ($i == $page) {
                         ?>
             <li class="page-item active mr-2 mt-2">
@@ -213,12 +223,14 @@ require_once "includes/blog_nav_links.php";
                         <?php echo $i; ?>
               </a>
             </li>
-            <!--THE ENDING OF PAGINATION LINK-->
                     <?php }
                 } 
             } ?>
-            <!--THE BEGINNING OF NEXT PAGE LINK-->
-            <?php if (isset($page) && !empty($page)) {
+            <!-----------------THE ENDING OF PAGINATION NUMBER LINK---------------->
+
+            <!-------------------THE BEGINNING OF NEXT PAGE LINK------------------->
+            <?php 
+            if (isset($page) && !empty($page)) {
                 if ($page+1 <= $final_page_count) {
                     ?>
             <li class="page-item mr-2 mt-2">
@@ -227,13 +239,14 @@ require_once "includes/blog_nav_links.php";
               </a>
             </li>
                 <?php }
-            } ?>
-            <!--THE ENDING OF NEXT PAGE LINK-->
+            } 
+            ?>
           </ul>
         </nav>
+        <!------------------- THE ENDING OF NEXT PAGE NAV LINK --------------------->
       </div>
-      <!-- MAIN AREA ENDS-->
-      <!-- SIDE AREA BEGINS-->
+      <!------------------------------ MAIN AREA ENDS ------------------------------>
+      <!----------------------------- SIDE AREA BEGINS ----------------------------->
       <div class="col-sm-4">
         <div class="card mt-4">
           <div class="card-body" style="background-color:#666699;">
@@ -350,7 +363,7 @@ require_once "includes/blog_nav_links.php";
                 $recent_image    = $rec_post['image'];
                 ?>
           <div class="media mb-3" style="border: 2px solid white">
-            <img src="<?php echo 'uploads/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
+            <img src="<?php echo 'images/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
             <div class="media-body ml-2">
               <a href="full_post.php?id=<?php echo htmlentities($recent_id); ?>">
                 <h6 class="lead text-white">

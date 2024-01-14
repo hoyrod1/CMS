@@ -58,7 +58,7 @@
                   <a href="comments.php" class="nav-link">Comments</a>
               </li>
               <li class="nav-item">
-                  <a href="blog_post.php" class="nav-link">Live Blog</a>
+                  <a href="blog_post.php?page=1" class="nav-link">Live Blog</a>
               </li>
                <li class="nav-item ml-5">
                    <a href="logout.php" class="nav-link text-danger">

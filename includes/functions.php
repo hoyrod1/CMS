@@ -162,6 +162,71 @@ function getUserByUserName($username)
 
 //=====================================================================//
 /**
+ * The funtion returns the user_record data if the user exist
+ * 
+ * @param string $image_file This param contains the image file name
+ * 
+ * @access public
+ * 
+ * @return mixed
+ */
+function imageValidation($image_file) 
+{
+    // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
+    $target_dir      = "images/";
+    $image           = $image_file;
+    $target_file     = $target_dir.basename($image);
+    $uploadOk        = 1;
+    $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // ------------- CODE TO VALIDATE IF THE IMAGE IS VALID -------------- //
+    // define form data and image error array and set to empty values
+    $photoErr        = [];
+    // 1st CHECK TO SEE IF FILE EXIST ALREADY
+    if (!preg_match("`^[-0-9A-Z_\. ]+$`i", $image)) {
+        $photoErr[] = 1;
+        $_SESSION['error_message'] = "Only english letters, numbers, dash, underscore and periods allowed";
+        $uploadOk = 0;
+    }
+    if (file_exists($target_file)) {
+        $photoErr[] = 2;
+        $_SESSION['error_message'] = "Sorry, file already exists";
+        $uploadOk = 0;
+    }
+    // 2nd CHECK FILE SIZE
+    if ($_FILES["image"]["size"] > 900000) {
+        $photoErr[] = 3;
+        $_SESSION['error_message'] = "Sorry, your file is too large";
+        $uploadOk = 0;
+    }
+    // 3rd CHECK TO SEE IF FILE FORMAT IS A jpg, jpeg, png, gif
+    if ($image_file_type != "jpg" 
+        && $image_file_type != "jpeg" 
+        && $image_file_type != "png"
+        && $image_file_type != "gif"
+    ) {
+        $photoErr[] = 4;
+        $_SESSION['error_message'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed";
+        $uploadOk = 0;
+    }
+    // 4th Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        $photoErr[] = 5;
+        $photoErr[] = "Sorry, your file was not uploaded <br>";
+    }
+
+    if (!empty($photoErr)) {
+        return false;
+    } else {
+        return $target_file;
+    }
+
+
+}
+//=====================================================================//
+
+//=====================================================================//
+/**
  * This function checks if the user exits in the database
  *
  * @param string $username This has the attempted username

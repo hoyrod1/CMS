@@ -280,47 +280,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     <br>
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"  class="dbform" method="POST" enctype="multipart/form-data">
           <fieldset>
-            <label for="name" class="fieldinput">Name:</label>
-            <br>
-            <input type="text" id="name" name="name" value="<?php echo $name;?>" required>
-            <span class="error">* <?php echo $nameErr;?></span>
-            <br>
-
-            <label for="email" class="fieldinput">email:</label>
-            <br>
-            <input type="text" id="email" name="email" value="<?php echo $email;?>" required>
-            <span class="error">* <?php echo $emailErr;?></span>
-            <br>
+            <div>
+                <label for="name" class="fieldinput">Name:</label>
+                <br>
+                <input type="text" id="name" name="name" value="<?php echo $name;?>" required>
+                <span class="error">* <?php echo $nameErr;?></span>
+            </div>
             <!---------------------------------------------------------------------->
-            <label for="contact_num" class="fieldinput">Number:</label>
-            <br>
-            <input type="text" id="contact_num" name="contact_num" value="<?php echo $contact_num;?>" required>
-            <span class="error">* <?php echo $contactErr;?></span>
-            <br>
+            <div>
+                <label for="email" class="fieldinput">email:</label>
+                <br>
+                <input type="text" id="email" name="email" value="<?php echo $email;?>" required>
+                <span class="error">* <?php echo $emailErr;?></span>
+            </div>
             <!---------------------------------------------------------------------->
-            <label for="username" class="fieldinput">Username:</label>
-            <br>
-            <input type="text" id="username" name="username" value="<?php echo $username;?>" required>
-            <span class="error">* <?php echo $usernameErr;?></span>
-            <br>
+            <div>
+                <label for="contact_num" class="fieldinput">Number:</label>
+                <br>
+                <input type="text" id="contact_num" name="contact_num" value="<?php echo $contact_num;?>" required>
+                <span class="error">* <?php echo $contactErr;?></span>
+            </div>
             <!---------------------------------------------------------------------->
-            <label for="password" class="fieldinput">Password:</label>
-            <br>
-            <input type="password" id="password" name="password" value="<?php echo $password;?>" required>
-            <span class="error">* <?php echo $passwordErr ." &nbsp; ". $passwordErr_6 ." &nbsp; ". $passwordErr_32 ." &nbsp; ". $passwordErr_n ." &nbsp; ". $passwordErr_l;?></span>
-            <br>
+            <div>
+                <label for="username" class="fieldinput">Username:</label>
+                <br>
+                <input type="text" id="username" name="username" value="<?php echo $username;?>" required>
+                <span class="error">* <?php echo $usernameErr;?></span>
+            </div>
             <!---------------------------------------------------------------------->
-            <label for="confirm_pass" class="fieldinput">Confirm Password:</label>
-            <br>
-            <input type="password" id="confirm_pass" name="confirm_pass" value="<?php echo $con_password;?>" required>
-            <span class="error">* <?php echo $confpassErr ." &nbsp; ". $passNoMatchErr;?></span>
-            <br>
-            <br>
+            <div>
+                <label for="password" class="fieldinput">Password:</label>
+                <br>
+                <input type="password" id="password" name="password" value="<?php echo $password;?>" required>
+                <span class="error">* <?php echo $passwordErr ." &nbsp; ". $passwordErr_6 ." &nbsp; ". $passwordErr_32 ." &nbsp; ". $passwordErr_n ." &nbsp; ". $passwordErr_l;?></span>
+            </div>
             <!---------------------------------------------------------------------->
-            <label for="photo" class="fieldinput">Photo:</label>
-            <br>
-            <input type="file" id="photo" name="photo" value="">
-            <br>
+            <div>
+                <label for="confirm_pass" class="fieldinput">Confirm Password:</label>
+                <br>
+                <input type="password" id="confirm_pass" name="confirm_pass" value="<?php echo $con_password;?>" required>
+                <span class="error">* <?php echo $confpassErr ." &nbsp; ". $passNoMatchErr;?></span>
+            </div>
+            <!---------------------------------------------------------------------->
+            <div>
+                <label for="photo" class="fieldinput">Photo:</label>
+                <br>
+                <input type="file" id="photo" name="photo" value="">
+            </div>
             <br>
             <!---------------------------------------------------------------------->
             <input type="submit" name="submit" value="Submit Record:">

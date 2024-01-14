@@ -18,12 +18,7 @@ require_once "includes/date_time.php";
 $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
-// define $_POST variables and set to empty values
-$myProfile_name         = "";
-$myProfile_title        = "";
-$myProfile_bio          = "";
-$myProfile_photo        = "";
-
+//--------------------------------------------------------------//
 //BEGINNING OF FETCHING EXISTING ADMIN DATA
 $admin_id          = "";
 if (isset($_SESSION["user_id"])) {
@@ -31,191 +26,439 @@ if (isset($_SESSION["user_id"])) {
 } elseif (isset($_COOKIE["admin_id"])) {
     $admin_id = $_COOKIE["admin_id"];
 }
+//--------------------------------------------------------------//
 
+//--------------------------------------------------------------//
+// define $_POST variables and set to empty values
+$myProfile_name  = "";
+$myProfile_title = "";
+$myProfile_bio   = "";
+$myProfile_photo = "";
+$image           = "";
+//--------------------------------------------------------------//
+
+//--------------------------------------------------------------//
 $myProfile_connect = new Database("localhost", "root", "root", "cms");
 $myProfile_sql     = "SELECT * FROM admin WHERE id = '$admin_id'";
 $myProfile_stmt    = $myProfile_connect->conn()->query($myProfile_sql);
 
 
 while ($myprofile_row = $myProfile_stmt->fetch()) {
-    $myProfile_username    = htmlspecialchars($myprofile_row['username']);
-    $myProfile_name        = htmlspecialchars($myprofile_row['admin_name']);
-    $myProfile_title       = htmlspecialchars($myprofile_row['admin_headline']);
-    $myProfile_bio         = htmlspecialchars($myprofile_row['admin_bio']);
-    $myProfile_photo       = htmlspecialchars($myprofile_row['admin_photo']);
+    $myProfile_username = htmlspecialchars($myprofile_row['username']);
+    $myProfile_name     = htmlspecialchars($myprofile_row['admin_name']);
+    $myProfile_title    = htmlspecialchars($myprofile_row['admin_headline']);
+    $myProfile_bio      = htmlspecialchars($myprofile_row['admin_bio']);
+    $myProfile_photo    = htmlspecialchars($myprofile_row['admin_photo']);
 }
+//--------------------------------------------------------------//
 
 //ENDING OF FETCHING EXISTING ADMIN DATA
-if (isset($_POST['submit'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    
     $editName      = testInput($_POST['editName']);
     $editHeadLine  = testInput($_POST['editHeadLine']);
     $enterBio      = testInput($_POST['enterBio']);
+    $image         = $_FILES['image']['name'];;
 
-    // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
-    $target_dir      = "images/";
-    $image           = $_FILES['image']['name'];
-    $target_file     = $target_dir.basename($image);
-    $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
+    // VALIDATE UPDATED ADMINS DATA INPUTED WITH NO IMAGE FOR THE DATABASE
     if (empty($editName) && empty($editHeadLine) && empty($enterBio) && empty($image)) {
         $_SESSION['error_message'] = "Please Update Your Profile!";
-        //redirect("www.myprofile.php");
+        redirect("myprofile.php");
     } elseif (strlen($editHeadLine) > 31) {
         $_SESSION['error_message'] = "Headline should be less than 30 characters";
         redirect("myprofile.php");
     } elseif (strlen($enterBio) > 9999) {
         $_SESSION['error_message'] = "Your Bio should be less than 10000 characters";
         redirect("myprofile.php");
-    } else {            
-        //QUERY TO UPDATE ADMINS DATA IN THE DATABASE
+    } else {
+        //QUERY TO UPDATE ADMINS DATA WITH NO IMAGE IN THE DATABASE
         if (empty($editHeadLine) && empty($enterBio) && empty($image)) {
+            // CHECK IF COOKIE WORKS WHEN SESSION ID DOESN'T EXIST //
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName' 
-						                          WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            $edit_sql = "UPDATE admin SET admin_name = :editName 
+						                          WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editName', $editName);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your name has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your name has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($editName) && empty($enterBio) && empty($image)) {
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_headline = '$editHeadLine' 
-						                          WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            $edit_sql = "UPDATE admin SET admin_headline = :editHeadLine 
+						                        WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your headline has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your headline has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($editName) && empty($editHeadLine) && empty($image)) {
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_bio = '$enterBio' 
-						             WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-
-        } elseif (empty($editName) && empty($editHeadLine) && empty($enterBio)) {
-
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_photo = '$image' 
-						                  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+            $edit_sql = "UPDATE admin SET admin_bio = :enterBio 
+                                           WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':enterBio', $enterBio);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your bio has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your bio has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($editHeadLine) && empty($image)) {
 
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-						                  admin_bio = '$enterBio' 
-									      WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            $edit_sql = "UPDATE admin SET admin_name = :editName, 
+						                  admin_bio = :enterBio 
+                                           WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editName', $editName);
+            $pre_stmt->bindValue(':enterBio', $enterBio);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your name & bio has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your name &  bio has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($editName) && empty($image)) {
 
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_headline = '$editHeadLine', 
-						                  admin_bio = '$enterBio' 
-									      WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            $edit_sql = "UPDATE admin SET admin_headline = :editHeadLine, 
+						                  admin_bio = :enterBio 
+                                           WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+            $pre_stmt->bindValue(':enterBio', $enterBio);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your headline & bio has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your headline &  bio has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($enterBio) && empty($image)) {
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-						                  admin_headline = '$editHeadLine' 
-									      WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-
-        } elseif (empty($editHeadLine) && empty($editName)) {
-
-            //IF ELSE FOR $editHeadLine AND editName
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_bio = '$enterBio', 
-						                  admin_photo = '$image' 
-									      WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-
-        } elseif (empty($enterBio) && empty($editName)) {
-            //IF ELSE FOR $enterBio AND $editName
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_headline = '$editHeadLine', 
-						                  admin_photo = '$image' 
-										  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-
-        } elseif (empty($enterBio) && empty($editHeadLine)) {
-            //IF ELSE FOR $enterBio AND $editHeadline
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-						                  admin_photo = '$image' 
-										  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-            move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
+            $edit_sql = "UPDATE admin SET admin_name = :editName, 
+						                  admin_headline = :editHeadLine 
+                                          WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editName', $editName);
+            $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your name & headline has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your name & headline has not been updated";
+                redirect("myprofile.php");
+            }
 
         } elseif (empty($image)) {
 
             $admin_id = $_SESSION["user_id"];
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-										  admin_headline = '$editHeadLine', 
-										  admin_bio = '$enterBio' 
-										  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            $edit_sql = "UPDATE admin SET admin_name = :editName, 
+										  admin_headline = :editHeadLine, 
+										  admin_bio = :enterBio 
+                                        WHERE id = :admin_id";
+            $pre_stmt = $connect->conn()->prepare($edit_sql);
+            $pre_stmt->bindValue(':editName', $editName);
+            $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+            $pre_stmt->bindValue(':enterBio', $enterBio);
+            $pre_stmt->bindValue(':admin_id', $admin_id);
+            $execute = $pre_stmt->execute();
+            
+            if ($execute) {
+                $_SESSION['success_message'] = 'Your name, headline & bio has been updated';
+                redirect("myprofile.php");
+            } else {
+                $_SESSION['error_message'] = "Your name, headline & bio has not been updated";
+                redirect("myprofile.php");
+            }
 
-        } elseif (empty($editName)) {
+        } elseif (!empty($image)) {
+            // ----------------------------------------------------------------- //
+            // The $validateImage FUNCTION VALIDATES THE IMAGE FROM THE FORM //
+            // The $validateImage FUNCTION RETURNS FALSE OR A IMAGE FILE NAME //
+            $validatdImage = imageValidation($image); 
+            // ----------------------------------------------------------------- //
 
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_headline = '$editHeadLine', 
-										  admin_bio = '$enterBio', 
-										  admin_photo = '$image' 
-										  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
+            if ($validatdImage == false) {
+                redirect("myprofile.php");
+            } else {
 
-        } elseif (empty($editHeadLine)) {
+                if (empty($editName) && empty($editHeadLine) && empty($enterBio)) {
 
-            $admin_id = $_SESSION["user_id"];
-            $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-										  admin_bio = '$enterBio', 
-										  admin_photo = '$image' 
-										  WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-
-        } elseif (empty($enterBio)) {
-
-             $admin_id = $_SESSION["user_id"];
-             $connect  = new Database("localhost", "root", "root", "cms");
-             $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-						                   admin_bio = '$enterBio', 
-										   admin_photo = '$image' 
-										   WHERE id = $admin_id";
-             $execute  = $connect->conn()->query($edit_sql);
-
-        } else {
-
-              $admin_id = $_SESSION["user_id"];
-              $connect  = new Database("localhost", "root", "root", "cms");
-              $edit_sql = "UPDATE admin SET admin_name = '$editName', 
-							                admin_headline = '$editHeadLine', 
-											admin_bio = '$enterBio', 
-											admin_photo = '$image' 
-                                            WHERE id = $admin_id";
-              $execute  = $connect->conn()->query($edit_sql);
-              move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-        } if ($execute) {
-
-             $_SESSION['success_message'] = 'Your Profile Has Been Updated!!!';
-             redirect("myprofile.php");
-
-        } else {
-
-             $_SESSION['error_message'] = "Your Profile Was Not Updated!";
-             redirect("www.myprofile.php");
-
+                    $admin_id = $_SESSION["user_id"];
+                    
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_photo = :image 
+                                                     WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($editHeadLine) && empty($editName)) {
+    
+    
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_bio = :enterBio', 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':enterBio', $enterBio);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your bio & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($enterBio) && empty($editName)) {
+                    
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_headline = :editHeadLine, 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your headline & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($enterBio) && empty($editHeadLine)) {
+                    
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_name = :editName, 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editName', $editName);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your name & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($editName)) {
+        
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_headline = :editHeadLine, 
+                                                  admin_bio = :enterBio', 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+                    $pre_stmt->bindValue(':enterBio', $enterBio);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your headline, bio & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($editHeadLine)) {
+        
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_name = :editName, 
+                                                  admin_bio = :enterBio', 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editName', $editName);
+                    $pre_stmt->bindValue(':enterBio', $enterBio);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your name, bio & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } elseif (empty($enterBio)) {
+        
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_name = :editName, 
+                                                  admin_headline = :editHeadLine, 
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editName', $editName);
+                    $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your name, headline & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+        
+                } else {
+        
+                    $admin_id = $_SESSION["user_id"];
+                    $connect  = new Database("localhost", "root", "root", "cms");
+                    $edit_sql = "UPDATE admin SET admin_name = :editName, 
+                                                  admin_headline = :editHeadLine, 
+                                                  admin_bio = :enterBio,  
+                                                  admin_photo = :image 
+                                                  WHERE id = :admin_id";
+                    $pre_stmt = $connect->conn()->prepare($edit_sql);
+                    $pre_stmt->bindValue(':editName', $editName);
+                    $pre_stmt->bindValue(':editHeadLine', $editHeadLine);
+                    $pre_stmt->bindValue(':enterBio', $enterBio);
+                    $pre_stmt->bindValue(':image', $image);
+                    $pre_stmt->bindValue(':admin_id', $admin_id);
+                    $execute = $pre_stmt->execute();
+            
+                    if ($execute) {
+                        $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                        unlink("images/" . $myProfile_photo);
+                        if (!$movImg) {
+                            $_SESSION['error_message'] = "There's an error moving your image";
+                            redirect("myprofile.php");
+                        } else {
+                            $_SESSION['success_message'] = "Your name, headline, bio & image has been updated";
+                            redirect("myprofile.php");
+                        }
+                    } else {
+                        $_SESSION['error_message'] = "Your image has not been updated";
+                        redirect("myprofile.php");
+                    }
+                }
+            }
+            
         }
     }
 }
@@ -284,29 +527,31 @@ require_once "includes/loggedin_nav_links.php";
                  <!-- EDIT NAME AND INSERT NEW HEADLINE -->
                  <div class="card-body">
                      <div class="form-group">
-                         <input class="form-control" id="title" type="text" name="editName" placeholder="<?php echo $myProfile_name ; ?>" required>
+                         <input class="form-control" id="title" type="text" name="editName" placeholder="<?php echo $myProfile_name ; ?>">
                      </div>
                      <div class="form-group">
-                         <input class="form-control" style="margin-bottom: 10px;" id="title" type="text" name="editHeadLine" placeholder="<?php echo $myProfile_title ; ?>" required>
+                         <input class="form-control" style="margin-bottom: 10px;" id="title" type="text" name="editHeadLine" placeholder="<?php echo $myProfile_title ; ?>">
                          <small class="text-muted">
-                             Add a Professional Headline
+                             Add or edit a Professional Headline
                          </small>
                          <span class="text-danger">
-                             Don't enter more than 30 characters
+                             Don't enter more than 100 characters
                          </span>
                      </div>
                      <!-- ENTER BIO -->
                      <div class="form-group bg-dark">
-                         <textarea class="form-control" id="post" name="enterBio" rows="8" cols="80" placeholder="<?php echo $myProfile_bio . ":"; ?>" required></textarea>
+                         <textarea class="form-control" id="post" name="enterBio" rows="8" cols="80" placeholder="<?php echo $myProfile_bio; ?>">
+                         </textarea>
                      </div>
                      <!-- SELECT IMAGE INPUT-->
                      <div class="form-group py-2">
                          <label for="image">
-                             <span style="color: white;">Select Image:</span>
+                            <span class="label">Existing Image: </span>
+                            <img src="<?php echo 'images/'. $myProfile_photo ; ?>" class="block img-fluid" height="65px" width="50px">
                          </label>
                      <div class="custom-file">
-                         <input class="custom-file-input" type="file" name="image" id="image" value="<?php echo $myProfile_photo ; ?>">
-                         <label class="custom-file-label" for="image"> Select Image... </label>
+                         <input class="custom-file-input" type="file" name="image" id="image">
+                         <label class="custom-file-label" for="image">Edit Image:</label>
                      </div>
                  </div>
             </div>

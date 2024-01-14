@@ -19,11 +19,15 @@ $conn = $database->conn();
 
 $sql = "CREATE TABLE admin (
   id INT(100) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  username VARCHAR(10) NOT NULL,
+  date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  username VARCHAR(100) NOT NULL,
   password VARCHAR(100) NOT NULL,
   admin_name VARCHAR(100) NOT NULL,
-  added_by VARCHAR(10) NOT NULL
+  added_by VARCHAR(100) NOT NULL,
+  admin_headline VARCHAR(100) NULL DEFAULT 'Please add a headline',
+  admin_bio VARCHAR(255) NULL DEFAULT 'Please add a headline',
+  admin_photo VARCHAR(255) NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   )";
 
 $conn->exec($sql);

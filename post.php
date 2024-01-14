@@ -132,7 +132,7 @@ require_once "includes/loggedin_nav_links.php";
         ?>
       </td>
         <td><?php echo $author ?></td>
-        <td><img src="<?php echo 'uploads/'.$image; ?>" width="50"></td>
+        <td><img src="<?php echo 'images/'.$image; ?>" width="50"></td>
         <td style="font-size: 25px;padding: 5px;">
         <span class="badge badge-success">
           <?php approvedCommentCount('comments', $id);?>

@@ -164,7 +164,7 @@ require_once "includes/blog_nav_links.php";
             ?>
     <div class="card">
       <!-- <dive style="width:250px; margin:auto; padding:5px; border: solid 4px #666699;"> -->
-        <img src="<?php echo 'uploads/'.htmlentities($image); ?>" max-height="300px" class="img-fluid card-img-top">
+        <img src="<?php echo 'images/'.htmlentities($image); ?>" class="img-fluid card-img-top">
       <!--</div> -->
         <div class="card-body">
           <h4 class="card-title">
@@ -215,7 +215,7 @@ require_once "includes/blog_nav_links.php";
             ?>
        <div style="background-color: white; border: 2px blue solid;font-size: 17px;padding: 5px;border-radius: 5px">
          <div class="media">
-           <img class="d-sm-block img-fluid align-self-start" src="uploads/2010 Exotica Pic1.jpg" width="65">
+           <img class="d-sm-block img-fluid align-self-start" src="images/avatar.jpg" width="65">
            <div class="media-body ml-2">
              <h6 class="lead"><?php echo $comment_name; ?></h6>
              <p class="small">
@@ -326,7 +326,7 @@ require_once "includes/blog_nav_links.php";
                     <h2 class="lead"><center>Sign Up</center></h2>
                   </div>
                   <div class="card-body" style="background-color:#666699;">
-                    <a href="blog_post.php" class="text-white">
+                    <a href="blog_post.php?page=1" class="text-white">
                       <button type="button" class="btn btn-success btn-block text-center text-white mb-3" name="button">
                         Return to the blog
                       </button>
@@ -393,7 +393,7 @@ require_once "includes/blog_nav_links.php";
 
                 ?>
              <div class="media mb-3" style="border: 2px solid white">
-             <img src="<?php echo 'uploads/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
+             <img src="<?php echo 'images/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
              <div class="media-body ml-2">
               <a href="full_post.php?id=<?php echo htmlentities($recent_id); ?>">
                 <h6 class="lead text-white">

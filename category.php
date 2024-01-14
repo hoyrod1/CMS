@@ -191,7 +191,7 @@ require_once "includes/blog_nav_links.php";
                 <h2 class="lead"><center>Sign Up</center></h2>
               </div>
               <div class="card-body" style="background-color:#666699;">
-                <a href="blog_post.php" class="text-white">
+                <a href="blog_post.php?page=1" class="text-white">
                   <button type="button" class="btn btn-success btn-block text-center text-white mb-3" name="button">
                     Return to the blog
                   </button>
@@ -257,7 +257,7 @@ require_once "includes/blog_nav_links.php";
             $recent_image    = $rec_post['image'];
             ?>
         <div class="media mb-3" style="border: 2px solid white">
-          <img src="<?php echo 'uploads/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
+          <img src="<?php echo 'images/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
           <div class="media-body ml-2">
             <a href="full_post.php?id=<?php echo htmlentities($recent_id); ?>">
               <h6 class="lead text-white">

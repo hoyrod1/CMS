@@ -43,19 +43,34 @@
     <div style="height: 10px;background-color: #f4f4f4;"></div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
           <div class="container">
-            <a href="index.php" class="navbar-brand">STC Media Blog</a>
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="index.php" class="nav-link">Home</a>
-              </li>
+            <?php
+            if (isset($_SESSION["user_id"])) {
+                echo '
+                <a href="dashboard.php" class="navbar-brand">STC Media Blog</a>
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <a href="myprofile.php" class="nav-link">Home</a>
+                  </li>';
+            } else {
+                echo '
+                <a href="index.php" class="navbar-brand">STC Media Blog</a>
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <a href="index.php" class="nav-link">Home</a>
+                  </li>';
+            }
+            ?>
               <li class="nav-item">
                 <a href="about.php" class="nav-link">About</a>
               </li>
               <li class="nav-item">
-                <a href="blog_post.php" class="nav-link">Blog</a>
+                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
               </li>
               <li class="nav-item">
                 <a href="contact.php" class="nav-link">Contact</a>

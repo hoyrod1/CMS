@@ -17,30 +17,30 @@ require_once "includes/date_time.php";
 
 confirmLogin();
 
-$search_param = $_GET['id'];
+$admin_id = $_GET['id'];
 if (isset($_POST['submit'])) {
     $edit_title           = testInput($_POST['edit_title']);
     $edit_categoryTitle   = testInput($_POST['edit_categoryTitle']);
     $edit_post            = testInput($_POST['edit_post']);
     $admin                = $_SESSION["admin_name"];
     // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
-    $target_dir      = "uploads/";
+    $target_dir      = "images/";
     $image           = $_FILES['edit_image']['name'];
     $target_file     = $target_dir.basename($image);
     $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     
     if (empty($edit_title)) {
         $_SESSION['error_message'] = "Please fill out the form";
-        redirect("www.edit_post.php?id=<?php echo $search_param; ?>");
+        redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_title) < 3) {
         $_SESSION['error_message'] = "Category Title should be more than 2 letters! ";
-        redirect("www.edit_post.php?id=<?php echo $search_param; ?>");
+        redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_title) > 100) {
         $_SESSION['error_message'] = "Title should be less than 100 letters! ";
-        redirect("www.edit_post.php?id=<?php echo $search_param; ?>");
+        redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_post) > 9999) {
         $_SESSION['error_message'] = "Your Post should be less than 10000 letters! ";
-        redirect("www.edit_post.php?id=<?php echo $search_param; ?>");
+        redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } else {
 
         if (!empty($image)) {
@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
 						                             category = '$edit_categoryTitle', 
 																				 image = '$image', 
 																				 post = '$edit_post' 
-																				 WHERE id = $search_param";
+																				 WHERE id = $admin_id";
             $execute  = $connect->conn()->query($edit_sql);
             move_uploaded_file($_FILES["edit_image"]["tmp_name"], $target_file);
         } else {
@@ -58,7 +58,7 @@ if (isset($_POST['submit'])) {
              $edit_sql = "UPDATE post SET title = '$edit_title', 
 						                              category = '$edit_categoryTitle', 
 																					post = '$edit_post' 
-																					WHERE id = $search_param";
+																					WHERE id = $admin_id";
              $execute  = $connect->conn()->query($edit_sql);
 
         }
@@ -70,8 +70,8 @@ if (isset($_POST['submit'])) {
 
         } else {
 
-            $_SESSION['error_message'] = "Post Was Not Added!";
-            redirect("www.edit_post.php?id=<?php echo $search_param; ?>");
+            $_SESSION['error_message'] = "Post Was Not updated!";
+            redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
 
         }
     }
@@ -107,9 +107,9 @@ require_once "includes/loggedin_nav_links.php";
         echo errorMessage();
         echo successMessage();
 
-        if (isset($search_param)) {
+        if (isset($admin_id)) {
                 $connect_post = new Database("localhost", "root", "root", "cms");
-                $select_post  = "SELECT * FROM post WHERE id = '$search_param'";
+                $select_post  = "SELECT * FROM post WHERE id = '$admin_id'";
                 $show_post    = $connect_post->conn()->query($select_post);
 
             while ($post_row = $show_post->fetch()) {
@@ -122,7 +122,7 @@ require_once "includes/loggedin_nav_links.php";
         }
         ?>
         <!-- FORM STARTS HERE-->
-        <form class="" action="update_post.php?id=<?php echo $search_param; ?>" method="post" enctype="multipart/form-data">
+        <form class="" action="update_post.php?id=<?php echo $admin_id; ?>" method="post" enctype="multipart/form-data">
           <div class="card bg-secondary">
             <div class="card-header">
                 <h1 style="color: #3F628A;">Add New Post</h1>
@@ -156,7 +156,7 @@ require_once "includes/loggedin_nav_links.php";
         <div class="form-group py-2">
           <div class="form-group">
             <span class="label">Existing Image: </span>
-              <img src="<?php echo 'uploads/'.$old_image; ?>" width="100">
+              <img src="<?php echo 'images/'.$old_image; ?>" width="100">
           </div>
           <label for="image"><span style="color: white;">Update Image:</span></label>
           <div class="custom-file">

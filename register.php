@@ -99,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         array_push($formDataErr, $passwordErr);
     } else {
         $password = testInput($_POST['password']);
+        //------------- STONGER VALIDATION CODE FOR PASSWORD SAVED -------------//
         // find one number
         // one uppercase letter
         // one lowercase letter
@@ -109,6 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         //     $passwordErr = "Invalid password";
         //     array_push($formDataErr, $passwordErr);
         // }
+        //----------------------------------------------------------------------//
         if (strlen($password) < 6) {
             $passwordErr_6 = "Your password must contain at least 6 characters";
             array_push($formDataErr, $passwordErr_6);
@@ -166,78 +168,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         
             if ($execute) {
                 $database = null;
-                $_SESSION["success_message"] = "You have registered, please login";
+                $_SESSION["success_message"] = "You're registered, please login";
                 redirect("login.php");
         
             } else {
                 $database = null;
                 $_SESSION["error_message"] = "Record has not been submitted";
-                // echo '<span class="error">Record has not been submitted!"</span>';
             }
-            // ------------------------------------------------------------------- //
+            
         } else {
 
-            // ------ CODE TO UPLOAD IMAGE IF $_FILES["photo"]["size"] ISSET ----- //
-            $target_dir    = "uploads/";
-            $photo         = $_FILES['photo']['name'];
-            $target_file   = $target_dir.basename($photo);
-            $uploadOk      = 1;
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            $image = $_FILES["photo"]["name"];
+            // ----------------------------------------------------------------- //
+            // The $validateImage FUNCTION VALIDATES THE IMAGE FROM THE FORM //
+            // The $validateImage FUNCTION RETURNS FALSE OR A IMAGE FILE NAME //
+            $validatdImage = imageValidation($image); 
+            // ----------------------------------------------------------------- //
 
-            // ------------- CODE TO VALIDATE IF THE IMAGE IS VALID -------------- //
-            // 1st CHECK TO SEE IF FILE EXIST ALREADY
-            if (file_exists($target_file)) {
-                $photoErr[] = "Sorry, file already exists <br>";
-                $uploadOk = 0;
-            }
-            // 2nd CHECK FILE SIZE
-            if ($_FILES["photo"]["size"] > 900000) {
-                $photoErr[] = "Sorry, your file is too large <br>";
-                $uploadOk = 0;
-            }
-            // 3rd CHECK TO SEE IF FILE FORMAT IS A jpg, jpeg, png, gif
-            if ($imageFileType != "jpg" 
-                && $imageFileType != "jpeg" 
-                && $imageFileType != "png"
-                && $imageFileType != "gif"
-            ) {
-                $photoErr[] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed <br>";
-                $uploadOk = 0;
-            }
-            // ------------------------------------------------------------------- //
-            // ?4th STORE THE getimagesize() ARRAY DATA FROM THE $_FILE SUPER GLOBAL
-            // $verify_image = getimagesize($_FILES["photo"]["tmp_name"]);
-        
-            // ?5th CHECK THE STORED getimagesize() ARRAY IS A VALID IMAGE
-            // if (!$verify_image) {
-            //     $photoErr[] = "File is not an image <br>";
-            //     $uploadOk = 0;
-            // }
-            // ------------------------------------------------------------------- //
-            // 5th Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                $photoErr[] = "Sorry, your file was not uploaded <br>";
-            } else {
-                $movImg = move_uploaded_file($_FILES["photo"]["tmp_name"], $target_file);
-                if (!$movImg) {
-                    $photoErr[] = "Sorry, there was an error uploading your image <br>";
-                }
-            }
             // ---------- CODE TO INSERT VALIDATED FORM DATA TO DATABASE --------- //
-            $database      = new Database("localhost", "root", "root", "cms");
+            $database = new Database("localhost", "root", "root", "cms");
         
-            $sql           = "INSERT INTO user_record(name, 
-                                                        email, 
-                                                        contact_num, 
-                                                        username, 
-                                                        password, 
-                                                        photo)
-                                VALUES(:namE, 
-                                        :emaiL, 
-                                        :contact_nuM, 
-                                        :usernamE, 
-                                        :passworD, 
-                                        :photO)";
+            $sql      = "INSERT INTO user_record(name, 
+                                                 email, 
+                                                 contact_num, 
+                                                 username, 
+                                                 password, 
+                                                 photo)
+                                          VALUES(:namE, 
+                                                 :emaiL, 
+                                                 :contact_nuM, 
+                                                 :usernamE, 
+                                                 :passworD, 
+                                                 :photO)";
         
             $prepare_stmt  = $database->conn()->prepare($sql);
             $prepare_stmt->bindValue(':namE', $name, PDO::PARAM_STR);
@@ -245,13 +207,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             $prepare_stmt->bindValue(':contact_nuM', $contact_num, PDO::PARAM_STR);
             $prepare_stmt->bindValue(':usernamE', $username, PDO::PARAM_STR);
             $prepare_stmt->bindValue(':passworD', $hashed_password, PDO::PARAM_STR);
-            $prepare_stmt->bindValue(':photO', $photo, PDO::PARAM_STR);
+            $prepare_stmt->bindValue(':photO', $image, PDO::PARAM_STR);
             $execute = $prepare_stmt->execute();
         
             if ($execute) {
-                $database = null;
-                $_SESSION["success_message"] = "You have registered, please login";
-                redirect("login.php");
+                $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                if (!$movImg) {
+                    $_SESSION["error_message"] = "There's a error moving your image";
+                    $database = null;
+                    redirect("login.php");
+                } else {
+                    $_SESSION['success_message'] = "You're registered, please login";
+                    $database = null;
+                    redirect("login.php");
+                }
         
             } else {
                 $database = null;

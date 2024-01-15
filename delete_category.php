@@ -22,8 +22,10 @@ if (isset($_GET['id'])) {
     $category_id = $_GET['id'];
     $admin_name  = $_SESSION['admin_name'];
     $connect     = new Database("localhost", "root", "root", "cms");
-    $sql         = "DELETE FROM category WHERE id = '$category_id'";
-    $execute     = $connect->conn()->query($sql);
+    $sql         = "DELETE FROM category WHERE id = :category_id";
+    $pre_stmt = $connect->conn()->prepare($sql);
+    $pre_stmt->bindValue(':category_id', $category_id);
+    $execute = $pre_stmt->execute();
 
     if ($execute) {
 

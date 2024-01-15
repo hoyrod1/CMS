@@ -101,8 +101,15 @@ if (isset($_POST['submit'])) {
 $title = "Category Page";
 require_once "includes/blog_nav_links.php"; 
 //--------------------------  HTML-NAV SECTION --------------------------//
-
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmComment()
+    {
+        return confirm("Are you sure you want to post your comment?") ;
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <hr>
 <!-- CONTAINER BEGINS-->
@@ -115,10 +122,10 @@ require_once "includes/blog_nav_links.php";
       <!-- MAIN AREA BEGINS-->
       <div class="col-sm-8" style="min-height: 40px;background-color:#666699;">
         <h1 style="color: white;font-family: Times, Arial, serif; font-size: 35px;"> 
-          Welcome to Rodney St. Cloud's Blog
+          Welcome to STC Media Blog CMS
         </h1>
         <h1 class="lead" style="color: white;font-family: Times, Arial, serif;">
-          The most polpular adult blogging platform on the internet!!!
+          The most polpular blogging platform on the internet.
         </h1>
         <!----------------- BEGGINING OF FULL POST QUERY ----------------->
         <?php 
@@ -177,7 +184,7 @@ require_once "includes/blog_nav_links.php";
                 <?php echo $category; ?>
               </a>
               <br> 
-              Written by 
+              Post written by 
               <a href="profile.php?admin_name=<?php echo htmlentities($author); ?>">
                 <?php echo htmlentities($author); ?>
               </a> on
@@ -201,7 +208,7 @@ require_once "includes/blog_nav_links.php";
     <!-----------------FETCH COMMENT AREA START---------------->
     <br>
       <span style="font-weight: bold;padding: 5px;color: white;font-size: 20px;">
-        Comment:
+        Comments:
       </span>
       <br>
       <?php 
@@ -217,7 +224,7 @@ require_once "includes/blog_nav_links.php";
          <div class="media">
            <img class="d-sm-block img-fluid align-self-start" src="images/avatar.jpg" width="65">
            <div class="media-body ml-2">
-             <h6 class="lead"><?php echo $comment_name; ?></h6>
+             <h6 class="lead"><strong><?php echo $comment_name; ?></strong></h6>
              <p class="small">
                 <?php
                     $dateTime = date('m/d/Y g:i a', strtotime($comment_date));
@@ -263,7 +270,7 @@ require_once "includes/blog_nav_links.php";
                 <textarea name="commenter_thoughts" class="form-control" rows="6" cols="80" required></textarea>
               </div>
               <div class="">
-                <button type="submit" name="submit" class="btn btn-primary btn-block"> 
+                <button type="submit" name="submit" class="btn btn-primary btn-block" onclick="return confirmComment() ;"> 
                   Submit
                 </button>
               </div>

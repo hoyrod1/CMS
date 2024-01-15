@@ -179,9 +179,10 @@ function imageValidation($image_file)
     $uploadOk        = 1;
     $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-    // ------------- CODE TO VALIDATE IF THE IMAGE IS VALID -------------- //
-    // define form data and image error array and set to empty values
-    $photoErr        = [];
+    // -------------- CODE TO VALIDATE IF THE IMAGE IS VALID --------------- //
+    // Define $photoErr array and set it to empty value to capture error count
+    $photoErr = [];
+    //-----------------------------------------------------------------------//
     // 1st CHECK TO SEE IF FILE EXIST ALREADY
     if (!preg_match("`^[-0-9A-Z_\. ]+$`i", $image)) {
         $photoErr[] = 1;
@@ -194,7 +195,7 @@ function imageValidation($image_file)
         $uploadOk = 0;
     }
     // 2nd CHECK FILE SIZE
-    if ($_FILES["image"]["size"] > 900000) {
+    if ($_FILES["photo"]["size"] > 900000) {
         $photoErr[] = 3;
         $_SESSION['error_message'] = "Sorry, your file is too large";
         $uploadOk = 0;
@@ -221,7 +222,16 @@ function imageValidation($image_file)
         return $target_file;
     }
 
+    // ----------------------SAVED CODE--------------------------- //
+    // ?4th STORE THE getimagesize() ARRAY DATA FROM THE $_FILE SUPER GLOBAL
+    // $verify_image = getimagesize($_FILES["photo"]["tmp_name"]);
 
+    // ?5th CHECK THE STORED getimagesize() ARRAY IS A VALID IMAGE
+    // if (!$verify_image) {
+    //     $photoErr[] = "File is not an image <br>";
+    //     $uploadOk = 0;
+    // }
+    // ------------------------------------------------------------------- //
 }
 //=====================================================================//
 

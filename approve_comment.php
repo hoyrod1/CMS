@@ -16,20 +16,11 @@ require_once "includes/functions.php";
 require_once "includes/date_time.php";
 
 confirmLogin();
-//--------------------------------------------------------------//
-//BEGINNING OF FETCHING EXISTING ADMIN DATA
-// $com_id = "";
-// if (isset($_SESSION["user_id"])) {
-//     $admin_id = $_SESSION["user_id"];
-// } elseif (isset($_COOKIE["admin_id"])) {
-//     $admin_id = $_COOKIE["admin_id"];
-// }
-//--------------------------------------------------------------//
 
-if (isset($_GET['id'])) {
+$com_id = $_GET['id'];
+$admin_name = $_SESSION['admin_name'];
 
-    $com_id = $_GET['id'];
-    $admin_name = $_SESSION['admin_name'];
+if (isset($com_id)) {
     
     $connect    = new Database("localhost", "root", "root", "cms");
     $sql        = "UPDATE comments 

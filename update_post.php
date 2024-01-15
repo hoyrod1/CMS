@@ -18,6 +18,7 @@ require_once "includes/date_time.php";
 confirmLogin();
 
 $admin_id = $_GET['id'];
+
 if (isset($_POST['submit'])) {
     $edit_title           = testInput($_POST['edit_title']);
     $edit_categoryTitle   = testInput($_POST['edit_categoryTitle']);
@@ -33,51 +34,88 @@ if (isset($_POST['submit'])) {
         $_SESSION['error_message'] = "Please fill out the form";
         redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_title) < 3) {
-        $_SESSION['error_message'] = "Category Title should be more than 2 letters! ";
+        $_SESSION['error_message'] = "Category Title has to be more than 2 letters";
         redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_title) > 100) {
-        $_SESSION['error_message'] = "Title should be less than 100 letters! ";
+        $_SESSION['error_message'] = "Title should be less than 100 letters";
         redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } elseif (strlen($edit_post) > 9999) {
-        $_SESSION['error_message'] = "Your Post should be less than 10000 letters! ";
+        $_SESSION['error_message'] = "Your Post should be less than 10000 letters";
         redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
     } else {
 
         if (!empty($image)) {
+            // ----------------------------------------------------------------- //
+            // The $validateImage FUNCTION VALIDATES THE IMAGE FROM THE FORM //
+            // The $validateImage FUNCTION RETURNS FALSE OR THE IMAGE FILE PATH //
+            $validatdImage = imageValidation($newImage); 
+            // ----------------------------------------------------------------- //
             $connect  = new Database("localhost", "root", "root", "cms");
-            $edit_sql = "UPDATE post SET title = '$edit_title', 
-						                             category = '$edit_categoryTitle', 
-																				 image = '$image', 
-																				 post = '$edit_post' 
-																				 WHERE id = $admin_id";
-            $execute  = $connect->conn()->query($edit_sql);
-            move_uploaded_file($_FILES["edit_image"]["tmp_name"], $target_file);
+            $edit_sql = "UPDATE post SET title = :edit_title, 
+						                             category = :edit_categoryTitle, 
+																				 image = :image, 
+																				 post = :edit_post 
+																				 WHERE id = :admin_id";
+             $pre_stmt = $connect->conn()->prepare($edit_sql);
+             $pre_stmt->bindValue(':edit_title', $edit_title);
+             $pre_stmt->bindValue(':edit_categoryTitle', $edit_categoryTitle);
+             $pre_stmt->bindValue(':image', $image);
+             $pre_stmt->bindValue(':edit_post', $edit_post);
+             $pre_stmt->bindValue(':admin_id', $admin_id);
+             $execute  = $pre_stmt->execute();
+
+            if ($execute) {
+
+                move_uploaded_file($_FILES["edit_image"]["tmp_name"], $validatdImage);
+    
+                $_SESSION['success_message'] = 'Your Post Has Been Updated!!!';
+                redirect("post.php");
+    
+            } else {
+    
+                $_SESSION['error_message'] = "Post Was Not updated!";
+                redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
+    
+            }
+
         } else {
 
              $connect  = new Database("localhost", "root", "root", "cms");
-             $edit_sql = "UPDATE post SET title = '$edit_title', 
-						                              category = '$edit_categoryTitle', 
-																					post = '$edit_post' 
-																					WHERE id = $admin_id";
-             $execute  = $connect->conn()->query($edit_sql);
+             $edit_sql = "UPDATE post SET title = :edit_title, 
+						                              category = :edit_categoryTitle, 
+																					post = :edit_post 
+																					WHERE id = :admin_id";
+             $pre_stmt = $connect->conn()->prepare($edit_sql);
+             $pre_stmt->bindValue(':edit_title', $edit_title);
+             $pre_stmt->bindValue(':edit_categoryTitle', $edit_categoryTitle);
+             $pre_stmt->bindValue(':edit_post', $edit_post);
+             $pre_stmt->bindValue(':admin_id', $admin_id);
+             $execute  = $pre_stmt->execute();
 
-        }
-
-        if ($execute) {
-
-            $_SESSION['success_message'] = 'Your Post Has Been Updated!!!';
-            redirect("post.php");
-
-        } else {
-
-            $_SESSION['error_message'] = "Post Was Not updated!";
-            redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
+            if ($execute) {
+    
+                $_SESSION['success_message'] = 'Your Post Has Been Updated!!!';
+                redirect("post.php");
+    
+            } else {
+    
+                $_SESSION['error_message'] = "Post Was Not updated!";
+                redirect("www.edit_post.php?id=<?php echo $admin_id; ?>");
+    
+            }
 
         }
     }
 }
-
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmUpdate()
+    {
+        return confirm('Are you sure you want to update your record?');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <!--  HTML-NAV SECTION -->
 <?php 
@@ -125,7 +163,7 @@ require_once "includes/loggedin_nav_links.php";
         <form class="" action="update_post.php?id=<?php echo $admin_id; ?>" method="post" enctype="multipart/form-data">
           <div class="card bg-secondary">
             <div class="card-header">
-                <h1 style="color: #3F628A;">Add New Post</h1>
+                <h1 style="color: #3F628A;">Update Post</h1>
             </div>
         <!-- INSERT NEW TITLE -->
         <div class="card-body bg-dark">
@@ -179,7 +217,7 @@ require_once "includes/loggedin_nav_links.php";
               </a>
         </div>
         <div class="col-lg-6 mb-2">
-            <button type="submit" name="submit" class="btn btn-success btn-block">
+            <button type="submit" name="submit" class="btn btn-success btn-block" onclick=" return confirmUpdate() ;">
                 <i class="fas fa-check"></i> Submit
             </button>
         </div>

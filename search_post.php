@@ -36,8 +36,8 @@ require_once "includes/unlogged_nav_links.php";
           The most polpular adult blogging platform on the internet!!!
         </h1>
         <?php 
-        
-            $connect   = new Database("localhost", "root", "root", "cms");
+
+        $connect   = new Database("localhost", "root", "root", "cms");
 
         if (isset($_GET["search_button"])) {
             $search_field = testInput($_GET["search"]);

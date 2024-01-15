@@ -17,10 +17,10 @@ require_once "includes/date_time.php";
 
 confirmLogin();
 
-$search_param = $_GET['id'];
-if (isset($search_param)) {
+$admin_id = $_GET['id'];
+if (isset($admin_id)) {
     $connect_post = new Database("localhost", "root", "root", "cms");
-    $select_post  = "SELECT * FROM post WHERE id = '$search_param'";
+    $select_post  = "SELECT * FROM post WHERE id = '$admin_id'";
     $show_post    = $connect_post->conn()->query($select_post);
 
     while ($post_row = $show_post->fetch()) {
@@ -30,13 +30,18 @@ if (isset($search_param)) {
         $old_post        = $post_row['post'];
     }
 
+} else {
+    $_SESSION['error_message'] = 'The post was not found';
+    redirect("post.php");
 }
 
 if (isset($_POST['submit'])) {
 
         $connect    = new Database("localhost", "root", "root", "cms");
-        $delete_sql = "DELETE FROM post WHERE id = $search_param";
-        $execute    = $connect->conn()->query($delete_sql);
+        $delete_sql = "DELETE FROM post WHERE id = :admin_id";
+        $pre_stmt = $connect->conn()->prepare($sql);
+        $pre_stmt->bindValue(':admin_id', $admin_id);
+        $execute = $pre_stmt->execute();
 
     if ($execute) {
         $remove_image = "uploads/$old_image";
@@ -44,14 +49,21 @@ if (isset($_POST['submit'])) {
         $_SESSION['success_message'] = 'Your Post Has Been Deleted!!!';
         redirect("post.php");
     } else {
-        $url = "www.delete_post.php?id=$search_param";
+        $url = "www.delete_post.php?id=$admin_id";
         $_SESSION['success_message'] = "Post Was Not Deleted!";
         redirect($url);
     }
 
 }
-
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmDelete()
+    {
+        return confirm('Are you sure you want to delete your post?');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <!--  HTML-NAV SECTION -->
 <?php 
@@ -82,7 +94,7 @@ require_once "includes/loggedin_nav_links.php";
           echo successMessage();
         ?>
         <!--------------------------FORM STARTS HERE-------------------------->
-        <form class="" action="delete_post.php?id=<?php echo $search_param; ?>" method="post" enctype="multipart/form-data">
+        <form class="" action="delete_post.php?id=<?php echo $admin_id; ?>" method="post" enctype="multipart/form-data">
           <div class="card bg-secondary">
             <div class="card-header">
               <h1 style="color: #3F628A;">Delete Post</h1>
@@ -105,13 +117,13 @@ require_once "includes/loggedin_nav_links.php";
         <div class="form-group py-2">
           <div class="form-group">
             <span class="label">Existing Image:</span>
-                &nbsp;<img src="<?php echo 'uploads/'.$old_image; ?>" width="100">
+                &nbsp;<img src="<?php echo 'images/'.$old_image; ?>" width="100">
           </div>
         </div> 
         <!-------------DISABLING CATEGORY FIELD AND SELECT IMAGE FEILD-------------->
         <!-----------------POST DESCRIPTION OF TITLE AND CATEGORY------------------->
         <div class="form-group bg-dark px-4 py-2">
-            <label for="post"><span style="color: white;">Update Post Description:</span></label>
+            <label for="post"><span style="color: white;">Existing Description:</span></label>
             <textarea name="edit_post" class="form-control" id="post" rows="8" cols="80" disabled>
                 <?php echo $old_post; ?>
             </textarea>
@@ -125,7 +137,7 @@ require_once "includes/loggedin_nav_links.php";
             </a>
           </div>
         <div class="col-lg-6 mb-2">
-          <button type="submit" name="submit" class="btn btn-danger btn-block" onclick="confirm('Are you sure you want to delete this record?');">
+          <button type="submit" name="submit" class="btn btn-danger btn-block" onclick="return confirmDelete() ;">
             <i class="fas fa-trash"></i> 
             Delete Post
           </button>

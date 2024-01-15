@@ -68,10 +68,10 @@ require_once "includes/blog_nav_links.php";
       <!-- MAIN AREA BEGINS-->
       <div class="col-sm-8" style="min-height: 40px;background-color:#666699;">
         <h1 style="color: white;font-family: Times, Arial, serif; font-size: 35px;"> 
-          Welcome to Rodney St. Cloud's Blog
+          Welcome to STC Media Blog CMS
         </h1>
         <h1 class="lead" style="color: white;font-family: Times, Arial, serif;">
-          The most polpular adult blogging platform on the internet!!!
+          The most polpular blogging platform on the internet.
         </h1>
         <?php 
         $connect   = new Database("localhost", "root", "root", "cms");

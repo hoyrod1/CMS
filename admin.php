@@ -71,6 +71,18 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmAdmin()
+    {
+        return confirm('Press "OK" to add new admin');
+    }
+    function confirmDelete()
+    {
+        return confirm('Are you sure you want to update your record?');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <!------------BEGGINING  HTML-NAV SECTION ------------>
 <?php 
@@ -132,7 +144,7 @@ require_once "includes/loggedin_nav_links.php";
                         </a>
                     </div>
                     <div class="col-lg-6 mb-2">
-                       <button type="submit" name="submit" class="btn btn-success btn-block">
+                       <button type="submit" name="submit" class="btn btn-success btn-block" onclick="return confirmAdmin() ;">
                          <i class="fas fa-check"></i> Submit
                        </button>
                     </div>
@@ -185,7 +197,8 @@ require_once "includes/loggedin_nav_links.php";
               <td><?php echo htmlentities($admin_added_by); ?></td>
               <td>
                   <a href="delete_admin.php?id=<?php echo $admin_id; ?>" 
-                     class="btn btn-danger"> Delete
+                     class="btn btn-danger" onclick="return confirmDelete() ;">
+                     Delete
                   </a>
               </td>
               </td>

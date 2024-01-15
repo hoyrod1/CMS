@@ -23,9 +23,13 @@ if (isset($_GET['id'])) {
     $admin_name = $_SESSION['admin_name'];
     $connect    = new Database("localhost", "root", "root", "cms");
     $sql        = "UPDATE comments 
-                   SET comment_status = 'off', approved_by = '$admin_name' 
-				   WHERE id = '$com_id'";
-    $execute    = $connect->conn()->query($sql);
+                   SET comment_status = 'off', 
+                   approved_by = :admin_name 
+				   WHERE id = :com_id";
+    $pre_stmt = $connect->conn()->prepare($sql);
+    $pre_stmt->bindValue(':com_id', $com_id);
+    $pre_stmt->bindValue(':admin_name', $admin_name);
+    $execute = $pre_stmt->execute();
 
     if ($execute) {
         $_SESSION['success_message'] = "Comment has been dis-approved successfully!";

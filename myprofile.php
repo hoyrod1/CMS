@@ -239,7 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                         $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
                         unlink("images/" . $myProfile_photo);
                         if (!$movImg) {
-                            $_SESSION['error_message'] = "There's an error moving your image";
+                            $_SESSION['error_message'] = "There's a error moving your image";
                             redirect("myprofile.php");
                         } else {
                             $_SESSION['success_message'] = "Your image has been updated";
@@ -462,8 +462,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         }
     }
 }
-
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmUpdate()
+    {
+        return confirm('Are you sure you want to update your record?');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <!--  HTML-NAV SECTION -->
 <?php 
@@ -527,26 +534,28 @@ require_once "includes/loggedin_nav_links.php";
                  <!-- EDIT NAME AND INSERT NEW HEADLINE -->
                  <div class="card-body">
                      <div class="form-group">
-                         <input class="form-control" id="title" type="text" name="editName" placeholder="<?php echo $myProfile_name ; ?>">
+                        <label for="name"><span class="label"> Admin name : </span></label>
+                        <input class="form-control" id="name" type="text" name="editName" placeholder="<?php echo $myProfile_name ; ?>">
                      </div>
                      <div class="form-group">
+                         <label for="title"><span class="label"> Headline title : </span></label>
                          <input class="form-control" style="margin-bottom: 10px;" id="title" type="text" name="editHeadLine" placeholder="<?php echo $myProfile_title ; ?>">
                          <small class="text-muted">
-                             Add or edit a Professional Headline
+                            Add or edit a Professional Headline
                          </small>
                          <span class="text-danger">
-                             Don't enter more than 100 characters
+                            Please do not enter more than 100 characters
                          </span>
                      </div>
                      <!-- ENTER BIO -->
                      <div class="form-group bg-dark">
-                         <textarea class="form-control" id="post" name="enterBio" rows="8" cols="80" placeholder="<?php echo $myProfile_bio; ?>">
-                         </textarea>
+                         <label for="bio"><span class="label"> Admin bio : </span></label>
+                         <textarea class="form-control" id="bio" name="enterBio" rows="8" cols="80"><?php echo $myProfile_bio ; ?></textarea>
                      </div>
                      <!-- SELECT IMAGE INPUT-->
                      <div class="form-group py-2">
                          <label for="image">
-                            <span class="label">Existing Image: </span>
+                            <span class="label"> Admin image: </span>
                             <img src="<?php echo 'images/'. $myProfile_photo ; ?>" class="block img-fluid" height="65px" width="50px">
                          </label>
                      <div class="custom-file">
@@ -563,7 +572,7 @@ require_once "includes/loggedin_nav_links.php";
                             </a>
                         </div>
                         <div class="col-lg-6 mb-2">
-                            <button type="submit" name="submit" class="btn btn-success btn-block">
+                            <button type="submit" name="submit" class="btn btn-success btn-block" onclick="return confirmUpdate() ;">
                                 <i class="fas fa-check"></i> Submit
                             </button>
                         </div>

@@ -16,7 +16,7 @@ require_once "includes/functions.php";
 require_once "includes/date_time.php";
 
 // $full_post_id = $_GET['id'];
-$cat_title = $_GET['category'];
+$cat_title = testInput($_GET["category"]);
 
 if (isset($_POST["email_button"])) {
 
@@ -77,17 +77,17 @@ require_once "includes/blog_nav_links.php";
         $stmt_post->bindValue(':Search', '%'.$search_field.'%');
         $stmt_post->execute();
     } else {
-      
-        // $cat_title = htmlentities(testInput($_GET["category"]));
-        $cat_title = testInput($_GET["category"]);
+
         /* IF STATEMENT FOR FULL POST WITH INVALID URL ID VALUE */
         if (!isset($cat_title)) {
             $_SESSION['error_message'] = "Invalid URL!";
             redirect('blog_post.php?page=1');
         }
         
-        $sql_cat         = "SELECT * FROM category WHERE title = '$cat_title'";
-        $stmt_cat        = $connect->conn()->query($sql_cat);
+        $sql_cat          = "SELECT * FROM category WHERE title = :cat_title";
+        $stmt_cat         = $connect->conn()->prepare($sql_cat);
+        $stmt_cat->bindValue(':cat_title', $cat_title);
+        $stmt_cat->execute();
         $rowcount_results = $stmt_cat->rowcount();
         
         if ($rowcount_results != 1) {

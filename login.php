@@ -13,14 +13,16 @@
 require_once "includes/session.php";
 require_once "includes/db_conn.php";
 require_once "includes/functions.php";
+require_once "includes/cookieToken.php";
+require_once "includes/login_cookies.php";
 require_once "includes/date_time.php";
 
 $test_db = new Database("localhost", "root", "root", "cms");
 $test = $test_db->conn();
 
-
 if (isset($_SESSION['user_name'])) {
     redirect('dashboard.php');
+    $_SESSION["success_message"] = $_SESSION['admin_name'] . ' you are already logged in';
 }
 
 if (isset($_POST['submit'])) {
@@ -34,26 +36,51 @@ if (isset($_POST['submit'])) {
         redirect('login.php');
 
     } else {
+        // VERIFY ADMIN EXIST WITH THE USERNAME GIVEN //
+        $admin_login = getAdmin($username);
 
-        $user_login = getAdmin($username);
-
-        if ($user_login === false) {
+        if ($admin_login === false) {
 
             $_SESSION["error_message"] = 'Failed to login! The user does not exist';
             redirect('login.php');
         
         }
-
-        $password_verified = password_verify($password, $user_login["password"]);
+        // VERIFY THE PASSWORD GIVEN //
+        $password_verified = password_verify($password, $admin_login["password"]);
 
         if ($password_verified) {
-            // $username = $user_login['name'];
-            // echo $username;
-            // exit;
-            $_SESSION['user_id']         = $user_login['id'];
-            $_SESSION['user_name']       = $user_login['username'];
-            $_SESSION['admin_name']      = $user_login['name'];
-            $_SESSION["success_message"] = 'Welcome ' . $_SESSION['user_name'];
+
+            // SET SESSION VARIABLES AFTER SUCCESSFULLY LOGGING IN //
+            $_SESSION['user_id']         = $admin_login['id'];
+            $_SESSION['user_name']       = $admin_login['username'];
+            $_SESSION['admin_name']      = $admin_login['admin_name'];
+            $_SESSION["success_message"] = 'Welcome ' . $_SESSION['admin_name'];
+            
+            // IF REMEBER ME HAS BEEN SELECTED CREATE A COOKIE FOR USER //
+            // USERS COOKIE DATA WILL BE STORED IN THE "cookie_token TABLE" //
+            if (isset($_POST['remember'])) {
+
+                // SET EXPIRATION TIME FOR COOKIE STORING THE "admin id" //
+                $expiry_time = 60*60*24*7;
+
+                // INSERT USERS ID INTO "cookie_token" TABLE //
+                $admin_id = $admin_login['id'];
+                
+                // CHECK IF COOKIE HAS ALREADY BEEN SET//
+                $verify_cookie = verifyTokenExist($admin_id);
+                if ($verify_cookie) {
+                    // UPDATE COOKIE AND COOKIE DATA IN "cookie_token" TABLE //
+                    updateLoginCookie($admin_id);
+                    // SET COOKIE WITH ADMIN ID //
+                    setcookie("admin_id", $admin_id, time()+$expiry_time);
+                } else {
+                    // SET COOKIE AND INSERT COOKIE DATA IN "cookie_token" TABLE //
+                    setLoginCookie($admin_id);
+                    // SET COOKIE WITH ADMIN ID //
+                    setcookie("admin_id", $admin_id, time()+$expiry_time);
+                }
+            }
+
             if (isset($_SESSION['trackingURL'])) {
                  redirect($_SESSION['trackingURL']);
             } else {
@@ -68,65 +95,13 @@ if (isset($_POST['submit'])) {
 
 
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-    <meta charset="utf-8">
-    <meta name="author" content="BooBoo">
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Login Page</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
 
-    <script src="https://kit.fontawesome.com/dfc9e3c3d1.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="javascript/js_script.js"></script>
-
-    </head>
-    <body>
-<!-- NAV-BAR BEGINS -->
-    <div style="height: 10px;background-color: #f4f4f4;"></div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-          <!-- Brand -->
-          <div class="container">
-            <a href="index.php" class="navbar-brand">STC Media Blog</a>
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Navbar links -->
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="index.php" class="nav-link">Home</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">About Page</a>
-              </li>
-              <li class="nav-item">
-                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">Contact Page</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">Feature Page</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Service</a>
-              </li>
-              <li class="nav-item ml-5">
-                <a href="register.php" class="nav-link text-success"> 
-                  <i class="fa-solid fa-registered">Register</i>
-                </a>
-              </li>
-            </ul>
-            <!-- Navbar links -->
-          </div>
-        </nav>
-    <div style="height: 10px;background-color: #f4f4f4;"></div>
-    <!-- NAV BAR END-->
+<!---------------------- OPENING HTML TAGS AND NAV LINKS --------------------->
+<?php 
+  $title = "Login Page";
+  require_once "includes/reg_log_nav_link.php"; 
+?>
+<!---------------------- CLOSING HTML TAGS AND NAV LINKS --------------------->
 <hr>
 <!-- HEADER BEGINS-->
 <header class="bg-dark text-white py-3">
@@ -155,38 +130,53 @@ if (isset($_POST['submit'])) {
 </div>
 <!------------------------- FORM BEGINS ------------------------------>
 <div class="card-body bg-dark">
-<form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-<div class="form-group">
-<label for="username"><span style="color: lightblue ;">User Name:</span></label>
-<div class="input-group mb-3">
-<div class="input-group-prepend">
-<span class="input-group-text text-white bg-info"><i class="fas fa-user"></i></span>
-</div>
-<input type="text" name="username" class="form-control" id="username">
-</div>
-</div>
-<div class="form-group">
-<label for="password"><span style="color: lightblue ;">Password:</span></label>
-<div class="input-group mb-3">
-<div class="input-group-prepend">
-<span class="input-group-text text-white bg-info"><i class="fas fa-lock"></i></span>
-</div>
-<input type="password" name="password" class="form-control" id="password">
-</div>
-</div>
-<input type="submit" name="submit" class="btn btn-info btn-block" value="Login">
-</form>
-<div style="margin-top: 5px;"><a href="register.php">Register</a></div>
+  <form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <div class="form-group">
+      <label for="username">
+        <span style="color: lightblue ;">User Name:</span>
+      </label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-white bg-info">
+            <i class="fas fa-user"></i>
+          </span>
+        </div>
+        <input type="text" name="username" class="form-control" id="username" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">
+        <span style="color: lightblue ;">Password:</span>
+      </label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text text-white bg-info">
+            <i class="fas fa-lock"></i>
+          </span>
+        </div>
+        <input type="password" name="password" class="form-control" id="password" required>
+      </div>
+    </div>
+
+    <input type="submit" name="submit" class="btn btn-info btn-block" value="Login">
+
+    <label style="margin-top: 10px;">
+        <input type="checkbox" name="remember"> Remember me
+    </label>
+
+  </form>
+
+  <div><a href="reset_password.php" style="color: #17a2b8;">Forgot password</a></div>
+
 </div>
 <!------------------------- FORM ENDS ------------------------------>
-</div>
-</div>
-</div>
+      </div>
+    </div>
+  </div>
 </section>
 <!----------------------- MAIN AREA ENDS --------------------------->
 <hr>
-
-
 <!----BEGINNING FOOTER AND BODY SECTION---->
 <?php require_once "includes/footer.php"; ?>
 <!-----ENDING FOOTER AND BODY SECTION------>

@@ -18,6 +18,23 @@ require_once "includes/date_time.php";
 $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmDelete()
+    {
+        return confirm('Are you sure you want to delete this comment?');
+    }
+    function confirmDisApprove()
+    {
+        return confirm('Are you sure you want to disapprove this comment?');
+    }
+    function confirmApprove()
+    {
+        return confirm('Are you sure you want to approve this comment?');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
+
 <!----------------------  HTML-NAV SECTION ---------------------->
 <?php 
 $title = "Comment Page";
@@ -103,9 +120,21 @@ require_once "includes/loggedin_nav_links.php";
             <td><?php echo htmlentities($comment_name); ?></td>
             <td><?php echo htmlentities($dateTime); ?></td>
             <td><?php echo htmlentities($comment_comments); ?></td>
-            <td style="min-width: 150px;"><a href="approve_comment.php?id=<?php echo $comment_id;?>" class="btn btn-success">Approve</a></td> 
-            <td><a href="delete_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-danger">Delete</a></td>
-            <td style="min-width: 160px;"> <a class="btn btn-primary" href="full_post.php?id=<?php echo $comment_post_id; ?>" target="_blank">Full Comment</a></td>
+            <td style="min-width: 150px;">
+              <a href="approve_comment.php?id=<?php echo $comment_id;?>" class="btn btn-success" onclick="return confirmApprove() ;">
+                Approve
+              </a>
+            </td> 
+            <td>
+              <a href="delete_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-danger" onclick="return confirmDelete() ;">
+                Delete
+              </a>
+            </td>
+            <td style="min-width: 160px;">
+              <a class="btn btn-primary" href="full_post.php?id=<?php echo $comment_post_id; ?>" target="_blank">
+                Full Comment
+              </a>
+            </td>
          </tr>
         <!----------BEGINNING OF TABLE HEADING------->
         </thead>
@@ -165,9 +194,21 @@ require_once "includes/loggedin_nav_links.php";
                 <td><?php echo htmlentities($comment_name); ?></td>
                 <td><?php echo htmlentities($dateTime); ?></td>
                 <td><?php echo htmlentities($comment_comments); ?></td>
-                <td style="min-width: 150px;"><a href="dis_approve_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-warning">Dis-Approve</a></td> 
-                <td><a href="delete_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-danger">Delete</a></td>
-                <td style="min-width: 160px;"> <a class="btn btn-primary" href="full_post.php?id=<?php echo $comment_post_id; ?>" target="_blank">Full Comment</a></td>
+                <td style="min-width: 150px;">
+                  <a href="dis_approve_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-warning" onclick="return confirmDisApprove() ;">
+                    Dis-Approve
+                  </a>
+                </td> 
+                <td>
+                  <a href="delete_comment.php?id=<?php echo $comment_id; ?>" class="btn btn-danger" onclick="return confirmDelete() ;">
+                    Delete
+                  </a>
+                </td>
+                <td style="min-width: 160px;">
+                  <a class="btn btn-primary" href="full_post.php?id=<?php echo $comment_post_id; ?>">
+                    Full Comment
+                  </a>
+                </td>
             </tr>
           </thead>
           <!------BEGINNING OF TABLE HEADING------->

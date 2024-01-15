@@ -20,62 +20,123 @@ $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
 if (isset($_POST['submit'])) {
-    $newPost         = testInput($_POST['newpost']);
-    $categoryTitle   = testInput($_POST['categoryTitle']);
-    $postdesciption  = testInput($_POST['postdesciption']);
-    $admin           = $_SESSION['admin_name'];
-    // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
-    $target_dir      = "uploads/";
-    $image           = $_FILES['image']['name'];
-    $target_file     = $target_dir.basename($image);
-    $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $newTitle       = testInput($_POST['newtitle']);
+    $newCategory    = testInput($_POST['newCategory']);
+    $postdesciption = testInput($_POST['postdesciption']);
+    $newImage       = $_FILES['image']['name'];
+    $adminName      = $_SESSION['admin_name'];
 
-    if (empty($newPost)) {
-        $_SESSION['error_message'] = "Please fill out the form";
+    if (empty($newTitle) && empty($newCategory) && empty($newImage) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter title, category and description";
         redirect("create_add_post.php");
-    } elseif (strlen($newPost) < 3) {
-        $_SESSION['error_message'] = "Category Title should be more than 2 characters! ";
+    } elseif (empty($newTitle) && empty($newCategory) && empty($newImage)) {
+        $_SESSION['error_message'] = "Please enter a title, category and image";
         redirect("create_add_post.php");
-    } elseif (strlen($newPost) > 100) {
-        $_SESSION['error_message'] = "Title should be less than 100 characters! ";
+    } elseif (empty($newTitle) && empty($newImage) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter a title  image and description";
+        redirect("create_add_post.php");
+    } elseif (empty($newCategory) && empty($newImage) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter category, image and description";
+        redirect("create_add_post.php");
+    } elseif (empty($newTitle) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter a title and the description";
+        redirect("create_add_post.php");
+    } elseif (empty($newTitle) && empty($newCategory)) {
+        $_SESSION['error_message'] = "Please enter a title and the category";
+        redirect("create_add_post.php");
+    } elseif (empty($newTitle) && empty($newImage)) {
+        $_SESSION['error_message'] = "Please enter a title and the image";
+        redirect("create_add_post.php");
+    } elseif (empty($newCategory) && empty($newImage)) {
+        $_SESSION['error_message'] = "Please enter a category and the image";
+        redirect("create_add_post.php");
+    } elseif (empty($newCategory) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter a category and the description";
+        redirect("create_add_post.php");
+    } elseif (empty($newImage) && empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter a image and the description";
+        redirect("create_add_post.php");
+    } elseif (empty($newTitle)) {
+        $_SESSION['error_message'] = "Please enter a title";
+        redirect("create_add_post.php");
+    } elseif (empty($newCategory)) {
+        $_SESSION['error_message'] = "Please select a category";
+        redirect("create_add_post.php");
+    } elseif (empty($newImage)) {
+        $_SESSION['error_message'] = "Please select a image";
+        redirect("create_add_post.php");
+    } elseif (empty($postdesciption)) {
+        $_SESSION['error_message'] = "Please enter a description";
+        redirect("create_add_post.php");
+    } elseif (strlen($newTitle) < 3) {
+        $_SESSION['error_message'] = "Your Title should be more than 2 characters ";
+        redirect("create_add_post.php");
+    } elseif (strlen($newTitle) > 100) {
+        $_SESSION['error_message'] = "Title must be less than 100 characters";
+        redirect("create_add_post.php");
+    } elseif (strlen($postdesciption) < 30) {
+        $_SESSION['error_message'] = "Your Post should be more than 30 characters";
         redirect("create_add_post.php");
     } elseif (strlen($postdesciption) > 9999) {
-        $_SESSION['error_message'] = "Your Post should be less than 10000 characters! ";
-        redirect("create_add_post.php");
+          $_SESSION['error_message'] = "Your Post must be less than 10000 characters";
+          redirect("create_add_post.php");
     } else {
-
-        $connect = new Database("localhost", "root", "root", "cms");
-
-        $sql      = "INSERT INTO post( title, category, author, image, post) 
-        VALUES(:New_Title, 
-        :New_Category, 
-        :New_Author, 
-        :New_Image, 
-        :New_Post)";
-        $pre_stmt = $connect->conn()->prepare($sql);
-        $pre_stmt->bindValue(':New_Title', $newPost);
-        $pre_stmt->bindValue(':New_Category', $categoryTitle);
-        $pre_stmt->bindValue(':New_Author', $admin);
-        $pre_stmt->bindValue(':New_Image', $image);
-        $pre_stmt->bindValue(':New_Post', $postdesciption);
-        $execute = $pre_stmt->execute();
-        move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-
-        if ($execute) {
-
-            $_SESSION['success_message'] = 'Posted Title With ID: ' .$connect->conn()->lastInsertId(). ' Was Added.';
-            redirect("post.php");
-
-        } else {
-
-            $_SESSION['success_message'] = "Post Was Not Added!";
+        // ----------------------------------------------------------------- //
+        // The $validateImage FUNCTION VALIDATES THE IMAGE FROM THE FORM //
+        // The $validateImage FUNCTION RETURNS FALSE OR THE IMAGE FILE PATH //
+        $validatdImage = imageValidation($newImage); 
+        // ----------------------------------------------------------------- //
+        if ($validatdImage == false) {
             redirect("create_add_post.php");
+        } else {
+            // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
+    
+            $connect = new Database("localhost", "root", "root", "cms");
+    
+            $sql      = "INSERT INTO post( title, category, author, image, post) 
+            VALUES(:newTitle, 
+            :newCategory, 
+            :New_Author, 
+            :New_Image, 
+            :New_Post)";
+            $pre_stmt = $connect->conn()->prepare($sql);
+            $pre_stmt->bindValue(':newTitle', $newTitle);
+            $pre_stmt->bindValue(':newCategory', $newCategory);
+            $pre_stmt->bindValue(':New_Author', $adminName);
+            $pre_stmt->bindValue(':New_Image', $newImage);
+            $pre_stmt->bindValue(':New_Post', $postdesciption);
+            $execute = $pre_stmt->execute();
+    
+            if ($execute) {
+    
+                $_SESSION['success_message'] = 'Post id: ' .$connect->conn()->lastInsertId(). ' was added.';
+                $movImg = move_uploaded_file($_FILES["image"]["tmp_name"], $validatdImage);
+                if (!$movImg) {
+                    $_SESSION['error_message'] = "There's a error saving your image";
+                    redirect("myprofile.php");
+                }
+                redirect("post.php");
+    
+            } else {
+    
+                $_SESSION['success_message'] = "Post Was Not Added!";
+                redirect("create_add_post.php");
+    
+            }
 
         }
+
     }
 }
-
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmAddPost()
+    {
+        return confirm('Press "OK" to add your post');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
 <!--  HTML-NAV SECTION -->
 <?php 
@@ -117,12 +178,15 @@ require_once "includes/loggedin_nav_links.php";
       <!-- INSERT NEW TITLE -->
      <div class="card-body bg-dark">
        <div class="form-group">
-         <label for="title"><span class="label"> Enter New Title: </span></label>
-         <input class="form-control" id="title" type="text" name="newpost" placeholder="Type title here..." required>
+          <label for="title"><span class="label"> Enter title: </span></label>
+          <input class="form-control" id="title" type="text" name="newtitle" placeholder="Type title here..." required>
+          <span class="text-danger" style="font-size: 15px;">
+              Please do not enter more than 100 characters
+          </span>
        </div>
       <!-- SELECT NEW CATEGORY -->
-      <label for="categoryTitle"><span class="label"> Choose Category: </span></label>
-        <select class="form-control" id="categoryTitle" name="categoryTitle" required>
+      <label for="categoryTitle"><span class="label"> Choose category: </span></label>
+        <select class="form-control" id="categoryTitle" name="newCategory" required>
           <option value="">Select...</option>
           <?php 
               $connect = new Database("localhost", "root", "root", "cms");
@@ -138,7 +202,7 @@ require_once "includes/loggedin_nav_links.php";
         </select>
       <!-- SELECT IMAGE INPUT-->
       <div class="form-group py-2">
-        <label for="image"><span style="color: white;">Select Image:</span></label>
+        <label for="image"><span style="color: white;">Select image:</span></label>
           <div class="custom-file">
             <input class="custom-file-input" type="file" name="image" id="image" value="" required>
             <label class="custom-file-label" for="image"> Select Image... </label>
@@ -147,7 +211,7 @@ require_once "includes/loggedin_nav_links.php";
       <!-- POST DESCRIPTION OF TITLE AND CATEGORY -->
       <div class="form-group bg-dark px-4 py-2">
         <label for="post">
-          <span style="color: white;">Post Description:</span>
+          <span style="color: white;">Post description:</span>
         </label>
         <textarea name="postdesciption" class="form-control" id="post" rows="8" cols="80" required>
         </textarea>
@@ -159,7 +223,7 @@ require_once "includes/loggedin_nav_links.php";
             <i class="fas fa-arrow-left"></i> Back to Dashboard</a>
         </div>
       <div class="col-lg-6 mb-2">
-        <button type="submit" name="submit" class="btn btn-success btn-block">
+        <button type="submit" name="submit" class="btn btn-success btn-block" onclick="return confirmAddPost() ;">
             <i class="fas fa-check"></i> Submit
         </button>
       </div>

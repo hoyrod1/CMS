@@ -23,7 +23,7 @@ if (isset($_POST['submit'])) {
     $admin         = $_SESSION['admin_name'];
 
     if (empty($categoryTitle)) {
-        $_SESSION['error_message'] = "Please fill out the form";
+        $_SESSION['error_message'] = "Please enter a category";
         redirect("categories.php");
     } elseif (strlen($categoryTitle) < 3) {
         $_SESSION['error_message'] = "Category Title has to be more than 2 letters ";
@@ -58,13 +58,25 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
+<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+<script>
+    function confirmDeleteCategory()
+    {
+        return confirm('Are you sure you want to delete this record?');
+    }
+    function confirmAddCategory()
+    {
+        return confirm('Press "OK" to add your category');
+    }
+</script>
+<!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!------------BEGGINING  HTML-NAV SECTION ------------>
+<!------------ BEGGINING HTML-NAV SECTION -------------->
 <?php 
 $title = "Category Page";
 require_once "includes/loggedin_nav_links.php"; 
 ?>
-<!-------------ENDING HTML-NAV SECTION---------------->
+<!------------- ENDING HTML-NAV SECTION ---------------->
 
   <hr>
   <!-- HEADER BEGINS-->
@@ -99,13 +111,16 @@ require_once "includes/loggedin_nav_links.php";
             </div>
             <div class="card-body bg-dark">
                 <div class="form-group">
-                  <label for="title">
-                      <span class="label"> 
-                          Category Title:
-                      </span>
-                  </label>
+                    <label for="title">
+                            <span class="label"> 
+                                Category Title:
+                            </span>
+                    </label>
                   <input class="form-control" id="title" type="text" name="newtitle" placeholder="Type title here..." required>
               </div>
+                    <span class="text-danger" style="font-size: 15px;">
+                        Please do not type in more than 100 characters
+                    </span>
               <div class="row py-3">
                   <div class="col-lg-6 mb-2">
                       <a href="dashboard.php" class="btn btn-warning btn-block">
@@ -113,7 +128,7 @@ require_once "includes/loggedin_nav_links.php";
                       </a>
                   </div>
                    <div class="col-lg-6 mb-2">
-                      <button type="submit" name="submit" class="btn btn-success btn-block">
+                      <button type="submit" name="submit" class="btn btn-success btn-block" onclick="return confirmAddCategory() ;">
                           <i class="fas fa-check"></i> Submit
                       </button>
                    </div>
@@ -163,7 +178,11 @@ require_once "includes/loggedin_nav_links.php";
                         ?>
                   </td>
                   <td><?php echo htmlentities($creator_name); ?></td>
-                  <td><a href="delete_category.php?id=<?php echo $catgory_id; ?>" class="btn btn-danger">Delete</a></td>
+                    <td>
+                      <a href="delete_category.php?id=<?php echo $catgory_id; ?>" class="btn btn-danger" onclick="return confirmDeleteCategory() ;">
+                        Delete
+                      </a>
+                    </td>
                   </td>
               </tr>
           </thead>

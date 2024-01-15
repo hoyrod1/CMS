@@ -26,8 +26,6 @@ $title = "Post Page";
 require_once "includes/loggedin_nav_links.php"; 
 ?>
 <!----------------------  HTML-NAV SECTION ----------------------->
-
-
   <hr>
   <!-- HEADER BEGINS-->
   <header class="bg-dark text-white py-3">

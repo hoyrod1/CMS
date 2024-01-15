@@ -24,7 +24,7 @@ $sql = "CREATE TABLE post (
   category VARCHAR(100) NOT NULL,
   author VARCHAR(100) NOT NULL,
   image VARCHAR(255) NOT NULL,
-  post VARCHAR(255) NOT NULL
+  post TEXT NOT NULL
   )";
 
 $conn->exec($sql);

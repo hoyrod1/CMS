@@ -22,8 +22,10 @@ if (isset($_GET['id'])) {
     $com_id     = $_GET['id'];
     $admin_name = $_SESSION['admin_name'];
     $connect    = new Database("localhost", "root", "root", "cms");
-    $sql        = "DELETE FROM comments WHERE id = '$com_id'";
-    $execute    = $connect->conn()->query($sql);
+    $sql        = "DELETE FROM comments WHERE id = :com_id";
+    $pre_stmt = $connect->conn()->prepare($sql);
+    $pre_stmt->bindValue(':com_id', $com_id);
+    $execute = $pre_stmt->execute();
 
     if ($execute) {
         $_SESSION['success_message'] = "Comment has been deleted!";
@@ -34,5 +36,3 @@ if (isset($_GET['id'])) {
     }
 
 }
-
-?>

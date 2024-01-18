@@ -18,19 +18,19 @@ require "includes/date_time.php";
 <!------------------------ OPENING HTML TAGS AND NAV LINKS ------------------------>
       <?php 
         $title = "Feature Page";
-        require_once "includes/reg_log_nav_link.php"; 
+        require_once "includes/links/reg_log_nav_link.php"; 
         ?>
 <!------------------------ CLOSING HTML TAGS AND NAV LINKS ------------------------>
 
         <!------------------------------ HEADER BEGINS ----------------------------->
         <hr>
-        <header class="bg-dark text-white py-3">
+        <header class="bg-light text-white py-3">
           <div class="container">
             <div class="row">
               <div class="col-md-12 ">
                 <h1>
-                  <i class="feature_i fas fa-text-height"> 
-                    STC Media CMS Blog Feature Page
+                  <i class="feature_i fas fa-text-height text-info"> 
+                    STC Media CMS Feature Page
                   </i>
                 </h1>
               </div>

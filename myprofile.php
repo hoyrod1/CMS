@@ -462,8 +462,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         }
     }
 }
+
+//------------- BEGGINING HTML-NAV SECTION -------------//
+$title = "My Profile Page";
+require_once "includes/links/loggedin_nav_links.php";
+//------------- ENDING HTML-NAV SECTION ---------------//
+
 ?>
-<!------------- BEGGINING JAVASCRIPT SECTION ------------->
+
+<!------------- BEGGINING JAVASCRIPT SECTION ---------------->
 <script>
     function confirmUpdate()
     {
@@ -472,27 +479,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!--  HTML-NAV SECTION -->
-<?php 
-$title = "My Profile Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!--  HTML-NAV SECTION -->
-
 <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light">
   <div class="container">
     <div class="row">
       <div class="col-md-12 ">
           <h1>
-              <i class="fas fa-user mr-2 text-success"> 
+              <i class="fas fa-user mr-2 text-info"> 
                   <?php echo $myProfile_name ; ?>'s Profile 
               </i>
           </h1>
-          <small style="font-weight:bold;float:right;font-size:20px;margin-right:30%;">
-              <?php echo $myProfile_title ; ?>
-          </small>
       </div>
     </div>
   </div>
@@ -567,8 +564,8 @@ require_once "includes/loggedin_nav_links.php";
             <!-- NAVIGATE BACK TO DASHBOARD AND SUBMIT BUTTON -->
                     <div class="row py-3" style="margin: 0 5px 0 5px;">
                         <div class="col-lg-6 mb-2">
-                            <a href="dashboard.php" class="btn btn-warning btn-block">
-                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            <a href="<?php echo "profile.php?admin_name=" . $_SESSION['admin_name']; ?>" class="btn btn-warning btn-block">
+                                <i class="fas fa-arrow-left"></i> Back to Admin Profile
                             </a>
                         </div>
                         <div class="col-lg-6 mb-2">

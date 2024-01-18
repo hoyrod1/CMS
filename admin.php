@@ -19,12 +19,19 @@ $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
 if (isset($_POST['submit'])) {
+  
+    //------- SET $adminName TO SESSION OR COOKIE ADMIN NAME -------//
+    $admin = "";
+    if (isset($_SESSION["admin_name"])) {
+        $admin = $_SESSION["admin_name"];
+    } elseif (isset($_COOKIE["admin_name"])) {
+        $admin = $_COOKIE["admin_name"];
+    }
+    //--------------------------------------------------------------//
     $username         = testInput($_POST['username']);
     $name             = testInput($_POST['name']);
     $password         = testInput($_POST['password']);
     $confirm_password = testInput($_POST['confirmpassword']);
-    $admin            = $_SESSION['admin_name'];
-    
 
     if (empty($username) || empty($name) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "Please fill out the form";
@@ -70,6 +77,12 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+
+//----------- BEGGINING HTML-NAV SECTION -----------//
+$title = "Admin Page";
+require_once "includes/links/loggedin_nav_links.php";
+//------------ ENDING HTML-NAV SECTION ------------//
+
 ?>
 <!------------- BEGGINING JAVASCRIPT SECTION ------------->
 <script>
@@ -84,27 +97,21 @@ if (isset($_POST['submit'])) {
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!------------BEGGINING  HTML-NAV SECTION ------------>
-<?php 
-$title = "Admin Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!-------------ENDING HTML-NAV SECTION---------------->
-   <!---------------------------------HEADER BEGINS-------------------------------->
-   <hr>
-   <header class="bg-dark text-white py-3">
-     <div class="container">
-       <div class="row">
-           <div class="col-md-12 ">
-               <h1>
-                   <i class="fas fa-user" style="color: #3F628A;"> Manage Admins </i>
-               </h1>
-           </div>
-      </div>
+<!---------------------------------HEADER BEGINS-------------------------------->
+<hr>
+  <header class="bg-light text-white py-3">
+    <div class="container">
+      <div class="row">
+          <div class="col-md-12 ">
+              <h1>
+                  <i class="fas fa-user" style="color: #3F628A;"> Manage Admins </i>
+              </h1>
+          </div>
     </div>
-  </header>
-  <hr>
-  <!----------------------------------HEADER ENDS---------------------------------->
+  </div>
+</header>
+<hr>
+<!----------------------------------HEADER ENDS---------------------------------->
 
   <!--------------------------------MAIN AREA BEGIN-------------------------------->
   <section class="container py-2 mb-4">
@@ -148,7 +155,7 @@ require_once "includes/loggedin_nav_links.php";
                          <i class="fas fa-check"></i> Submit
                        </button>
                     </div>
-                  </div>
+                </div>
             </div>
           </div>
         </form>

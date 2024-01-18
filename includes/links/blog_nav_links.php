@@ -8,7 +8,7 @@
  * @package  Unlogg_Nav_Links_Configuration_Page
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/includes/unlogg_nav_links.php
+ * @link     https://cms/includes/links/unlogg_nav_links.php
  */
 ?>
 <!DOCTYPE html>
@@ -32,6 +32,7 @@
     <div class="container">
           <?php
             if (isset($_SESSION["user_id"])) {
+                $name = $_SESSION["admin_name"];
                 echo '
                 <a href="dashboard.php" class="navbar-brand">STC Media Blog</a>
                 <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
@@ -39,7 +40,7 @@
                 </button>
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item">
-                    <a href="myprofile.php" class="nav-link">Home</a>
+                    <a href="profile.php?admin_name='. $name .'" class="nav-link">Home</a>
                   </li>';
             } else {
                 echo '
@@ -53,21 +54,21 @@
                   </li>';
             }
             ?>
-          <li class="nav-item">
-            <a href="about.php" class="nav-link">About</a>
-          </li>
-          <li class="nav-item">
-            <a href="blog_post.php?page=1" class="nav-link">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a href="contact.php" class="nav-link">Contact</a>
-          </li>
-          <li class="nav-item">
-            <a href="feature.php" class="nav-link">Feature</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="service.php">Service</a>
-          </li>
+            <li class="nav-item">
+              <a href="about.php" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="feature.php" class="nav-link">Feature</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="service.php">Service</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.php" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="blog_post.php?page=1" class="nav-link">Blog</a>
+            </li>
           <?php
             if (isset($_SESSION["user_id"])) {
                 echo '

@@ -64,7 +64,8 @@ if (isset($_POST['submit'])) {
                 $expiry_time = 60*60*24*7;
 
                 // INSERT USERS ID INTO "cookie_token" TABLE //
-                $admin_id = $admin_login['id'];
+                $admin_id   = $admin_login['id'];
+                $admin_name = $admin_login['admin_name'];
                 
                 // CHECK IF COOKIE HAS ALREADY BEEN SET//
                 $verify_cookie = verifyTokenExist($admin_id);
@@ -73,18 +74,23 @@ if (isset($_POST['submit'])) {
                     updateLoginCookie($admin_id);
                     // SET COOKIE WITH ADMIN ID //
                     setcookie("admin_id", $admin_id, time()+$expiry_time);
+                    // SET COOKIE WITH ADMIN NAME //
+                    setcookie("admin_name", $admin_name, time()+$expiry_time);
                 } else {
                     // SET COOKIE AND INSERT COOKIE DATA IN "cookie_token" TABLE //
                     setLoginCookie($admin_id);
                     // SET COOKIE WITH ADMIN ID //
                     setcookie("admin_id", $admin_id, time()+$expiry_time);
+                    // SET COOKIE WITH ADMIN NAME //
+                    setcookie("admin_name", $admin_name, time()+$expiry_time);
                 }
             }
 
             if (isset($_SESSION['trackingURL'])) {
                  redirect($_SESSION['trackingURL']);
             } else {
-                 redirect('dashboard.php');
+                $name = $_SESSION['admin_name'];
+                redirect("profile.php?admin_name=$name");
             }
         } else {
             $_SESSION["error_message"] = 'Failed to login! Incorect Password.';
@@ -93,25 +99,27 @@ if (isset($_POST['submit'])) {
     }
 }
 
-
-?>
-
-<!---------------------- OPENING HTML TAGS AND NAV LINKS --------------------->
-<?php 
+//---------------------- OPENING HTML TAGS AND NAV LINKS ---------------------//
   $title = "Login Page";
-  require_once "includes/reg_log_nav_link.php"; 
+  require_once "includes/links/reg_log_nav_link.php"; 
+//---------------------- CLOSING HTML TAGS AND NAV LINKS ---------------------//
+
 ?>
-<!---------------------- CLOSING HTML TAGS AND NAV LINKS --------------------->
+
 <hr>
 <!-- HEADER BEGINS-->
-<header class="bg-dark text-white py-3">
-<div class="container">
-<div class="row">
-<div class="col-md-12 ">
-<h1></h1>
-</div>
-</div>
-</div>
+<header class="bg-light text-white py-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 ">
+        <h1 style="text-align: center;">
+          <i class="about_i fas fa-text-height text-info"> 
+            STC Media CMS Login Page
+          </i>
+        </h1>
+      </div>
+    </div>
+  </div>
 </header>
 <!-- HEADER ENDS-->
     <hr>
@@ -122,12 +130,12 @@ if (isset($_POST['submit'])) {
     <br>
 <!----------------------- MAIN AREA BEGINS --------------------------->
 <section class="container py-2 mb-4">
-<div class="row">
-<div class="offset-sm-3 col-sm-6" style="min-height: 400px;">
-<div class="card bg-secondary text-light">
-<div class="card-header">
-<h1>Log in</h1>
-</div>
+  <div class="row">
+    <div class="offset-sm-3 col-sm-6" style="min-height: 400px;">
+      <div class="card bg-secondary text-light">
+        <div class="card-header">
+          <h1>Log in</h1>
+        </div>
 <!------------------------- FORM BEGINS ------------------------------>
 <div class="card-body bg-dark">
   <form class="" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
@@ -164,11 +172,8 @@ if (isset($_POST['submit'])) {
     <label style="margin-top: 10px;">
         <input type="checkbox" name="remember"> Remember me
     </label>
-
   </form>
-
   <div><a href="reset_password.php" style="color: #17a2b8;">Forgot password</a></div>
-
 </div>
 <!------------------------- FORM ENDS ------------------------------>
       </div>

@@ -17,10 +17,10 @@ require_once "includes/date_time.php";
 
 confirmLogin();
 
-if (isset($_GET['id'])) {
+$category_id = $_GET['id'];
 
-    $category_id = $_GET['id'];
-    $admin_name  = $_SESSION['admin_name'];
+if (isset($category_id)) {
+
     $connect     = new Database("localhost", "root", "root", "cms");
     $sql         = "DELETE FROM category WHERE id = :category_id";
     $pre_stmt = $connect->conn()->prepare($sql);
@@ -29,12 +29,15 @@ if (isset($_GET['id'])) {
 
     if ($execute) {
 
-        $_SESSION['success_message'] = "Category has been deleted!";
+        $_SESSION['success_message'] = "Category has been deleted";
         redirect('categories.php');
     } else {
 
-        $_SESSION['error_message'] = "ERROR! Category was not deleted.";
+        $_SESSION['error_message'] = "ERROR! Category was not deleted";
         redirect('categories.php');
     }
 
+} else {
+    $_SESSION['error_message'] = "ERROR! Category does not exist";
+    redirect('categories.php');
 }

@@ -15,9 +15,9 @@ require_once "includes/session.php";
 require_once "db_conn.php";
 require_once "includes/cookieToken.php";
 
-//====================================================================//
+//===============================================================================//
 /**
- * This function checks if the user exits in the database
+ * ApprovedCommentCount function checks if the user exits in the database
  *
  * @param string $table   This has the approved comment table
  * @param string $post_id This has the POST ID
@@ -36,11 +36,11 @@ function approvedCommentCount($table, $post_id)
     $row_count  = array_shift($execute);
     echo $row_count;
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+//===============================================================================//
 /**
- * This function checks if the user exits in the database
+ * ConfirmLogin function checks if the user exits in the database
  * 
  * @access public  
  * 
@@ -70,11 +70,12 @@ function confirmLogin()
         redirect('login.php');
     }
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+
+//===============================================================================//
 /**
- * This function checks if the user exits in the database
+ * DashboardCount function checks if the user exits in the database
  *
  * @param string $table This has the attempted username
  * 
@@ -91,11 +92,11 @@ function dashboardCount($table)
     $row_count  = array_shift($execute);
     echo $row_count;
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+//===============================================================================//
 /**
- * This function checks if the user exits in the database
+ * DisapprovedCommentCount function checks if the user exits in the database
  *
  * @param string $table   This has the approved comment table
  * @param string $post_id This has the POST ID
@@ -114,11 +115,11 @@ function disapprovedCommentCount($table, $post_id)
     $row_count  = array_shift($execute);
     echo $row_count;
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+//===============================================================================//
 /**
- * The funtion returns the admin data if admin exist
+ * GetAdmin funtion returns the admin data if admin exist
  * 
  * @param string $username This param has the admin username submitted
  * 
@@ -136,11 +137,33 @@ function getAdmin($username)
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
     return $results;
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+//===============================================================================//
 /**
- * The funtion returns the user_record data if the user exist
+ * GetUserByEmail() funtion returns the user_record data by email if the user exist
+ * 
+ * @param string $email This param has the email submitted
+ * 
+ * @access public
+ * 
+ * @return mixed
+ */
+function getUserByEmail($email)
+{
+    $connect = new Database("localhost", "root", "root", "cms");
+    $sql = "SELECT * FROM user_record WHERE email = :email";
+    $stmt = $connect->conn()->prepare($sql);
+    $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+    $stmt->execute();
+    $results = $stmt->rowCount();
+    return $results;
+}
+//===============================================================================//
+
+//===============================================================================//
+/**
+ * GetUserByUserName funtion returns the user_record data if the user exist
  * 
  * @param string $username This param has the username submitted
  * 
@@ -158,11 +181,11 @@ function getUserByUserName($username)
     $results = $stmt->fetch(PDO::FETCH_ASSOC);
     return $results;
 }
-//=====================================================================//
+//===============================================================================//
 
-//=====================================================================//
+//===============================================================================//
 /**
- * The funtion returns the user_record data if the user exist
+ * ImageValidation funtion returns the user_record data if the user exist
  * 
  * @param string $image_file This param contains the image file name
  * 
@@ -233,11 +256,11 @@ function imageValidation($image_file)
     // }
     // ------------------------------------------------------------------- //
 }
-//=====================================================================//
+//===============================================================================//
 
 //=====================================================================//
 /**
- * This function checks if the user exits in the database
+ * LoginAttempt function checks if the user exits in the database
  *
  * @param string $username This has the attempted username
  * @param string $password This has the attempted password
@@ -273,7 +296,7 @@ function loginAttempt($username, $password)
 
 //=====================================================================//
 /**
- * This function redirects the users url path
+ * Redirect function redirects the users url path
  *
  * @param string $new_url This has the url to rediected
  * 
@@ -290,7 +313,7 @@ function redirect($new_url)
 
 //=====================================================================//
 /**
- * This function sanatizes the form feilds
+ * TestInput function sanatizes the form feilds
  *
  * @param string $data This has the users form input data
  * 
@@ -309,7 +332,7 @@ function testInput($data)
 
 //=====================================================================//
 /**
- * This function checks if the user exits in the database
+ * UsernameExist function checks if the user exits in the database
  *
  * @param string $username 
  * 

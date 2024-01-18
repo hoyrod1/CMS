@@ -17,8 +17,15 @@ require_once "includes/date_time.php";
 
 confirmLogin();
 
+//------- SET $adminName TO SESSION OR COOKIE ADMIN NAME -------//
+$admin_name = "";
+if (isset($_SESSION["admin_name"])) {
+    $admin_name = $_SESSION["admin_name"];
+} elseif (isset($_COOKIE["admin_name"])) {
+    $admin_name = $_COOKIE["admin_name"];
+}
+//--------------------------------------------------------------//
 $com_id = $_GET['id'];
-$admin_name = $_SESSION['admin_name'];
 
 if (isset($com_id)) {
     

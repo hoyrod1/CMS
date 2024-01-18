@@ -20,10 +20,19 @@ confirmLogin();
 $admin_id = $_GET['id'];
 
 if (isset($_POST['submit'])) {
+  
+    //------- SET $adminName TO SESSION OR COOKIE ADMIN NAME -------//
+    $admin = "";
+    if (isset($_SESSION["admin_name"])) {
+        $admin = $_SESSION["admin_name"];
+    } elseif (isset($_COOKIE["admin_name"])) {
+        $admin = $_COOKIE["admin_name"];
+    }
+    //--------------------------------------------------------------//
     $edit_title           = testInput($_POST['edit_title']);
     $edit_categoryTitle   = testInput($_POST['edit_categoryTitle']);
     $edit_post            = testInput($_POST['edit_post']);
-    $admin                = $_SESSION["admin_name"];
+    
     // CODE TO UPLOAD IMAGE TO FILE AND IMAGE NAME TO DATA BASE //
     $target_dir      = "images/";
     $image           = $_FILES['edit_image']['name'];
@@ -120,17 +129,17 @@ if (isset($_POST['submit'])) {
 <!--  HTML-NAV SECTION -->
 <?php 
 $title = "Update Post Page";
-require_once "includes/loggedin_nav_links.php"; 
+require_once "includes/links/loggedin_nav_links.php"; 
 ?>
 <!--  HTML-NAV SECTION -->
 
   <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light text-white py-3">
     <div class="container">
       <div class="row">
           <div class="col-md-12 ">
-          <h1><i class="fas fa-edit" style="color: #3F628A;"> Update Post </i></h1>
+          <h1 style="text-align: center;"><i class="fas fa-edit" style="color: #3F628A;"> Update Post </i></h1>
           </div>
       </div>
     </div>
@@ -212,9 +221,11 @@ require_once "includes/loggedin_nav_links.php";
       <!-- NAVIGATE BACK TO DASHBOARD AND SUBMIT BUTTON -->
       <div class="row py-3" style="margin: 0 5px 0 5px;">
           <div class="col-lg-6 mb-2">
-              <a href="dashboard.php" class="btn btn-warning btn-block">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-              </a>
+            <a href="post.php" class="btn btn-warning btn-block">
+              <i class="fas fa-arrow-left">
+                Back to Post page
+              </i>
+            </a>
         </div>
         <div class="col-lg-6 mb-2">
             <button type="submit" name="submit" class="btn btn-success btn-block" onclick=" return confirmUpdate() ;">

@@ -15,10 +15,19 @@ require_once "includes/db_conn.php";
 require_once "includes/functions.php";
 require_once "includes/date_time.php";
 
-if (isset($_SESSION['user_name'])) {
-    redirect('dashboard.php');
-    $_SESSION["success_message"] = $_SESSION['admin_name'] . ' you are already registered';
+//--------------------------------------------------------------//
+//------- CHECK IF ADMIN SESSION OR COOKIE HAS BEEN SET --------//
+if (isset($_SESSION['admin_name'])) {
+    $ad_name = $_SESSION['admin_name'];
+} elseif (isset($_COOKIE["admin_name"])) {
+    $ad_name = $_COOKIE["admin_name"];
 }
+
+if (isset($ad_name)) {
+    $_SESSION["success_message"] = "$ad_name, you are already registered";
+    redirect("profile.php?admin_name=$ad_name");
+}
+//--------------------------------------------------------------//
 
 // define $_POST variables and set to empty values
 $name         = "";
@@ -30,10 +39,10 @@ $con_password = "";
 $phot_err     = "";
 
 // define error variables and set to empty values
-$nameErr          = "";
-$emailErr         = "";
 $contactErr       = "";
-$usernameErr      = "";
+$emailErr         = "";
+$emailExistErr    = "";
+$nameErr          = "";
 $passwordErr      = "";
 $passwordErr_6    = "";
 $passwordErr_32   = "";
@@ -41,6 +50,7 @@ $passwordErr_n    = "";
 $passwordErr_l    = "";
 $confpassErr      = "";
 $passNoMatchErr   = "";
+$usernameErr      = "";
 
 // define form data and image error array and set to empty values
 $formDataErr = [];
@@ -69,6 +79,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailErr = "Invalid email format";
             array_push($formDataErr, $emailErr);
+        } else {
+            $email_exist = getUserByEmail($email);
+            if ($email_exist) {
+                $emailExistErr = "Email already exist";
+                array_push($formDataErr, $emailExistErr);
+            }
         }
     }
 
@@ -232,20 +248,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
 }
 
+//---------------------- OPENING HTML TAGS AND NAV LINKS ---------------------//
+$title = "Registratrion Page";
+require_once "includes/links/reg_log_nav_link.php"; 
+//---------------------- CLOSING HTML TAGS AND NAV LINKS ---------------------//
+
 ?>
+<hr>
+<!-- HEADER BEGINS-->
+<header class="bg-light text-white py-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 ">
+        <h1 style="text-align: center;">
+          <i class="about_i fas fa-text-height text-info"> 
+            STC Media CMS Registration Page
+          </i>
+        </h1>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- HEADER ENDS-->
 
-      <!---------------------- OPENING HTML TAGS AND NAV LINKS --------------------->
-      <?php 
-        $title = "Registratrion Page";
-        require_once "includes/reg_log_nav_link.php"; 
-        ?>
-      <!---------------------- CLOSING HTML TAGS AND NAV LINKS --------------------->
-
-      <div class="reg_form mt-5 mb-5">
-      <?php 
-        echo errorMessage(); 
-        echo successMessage(); 
-        ?>
+<div class="reg_form mt-5 mb-5">
+<?php 
+echo errorMessage(); 
+echo successMessage(); 
+?>
     <br>
         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>"  class="dbform" method="POST" enctype="multipart/form-data">
           <fieldset>
@@ -260,7 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
                 <label for="email" class="fieldinput">email:</label>
                 <br>
                 <input type="text" id="email" name="email" value="<?php echo $email;?>" required>
-                <span class="error">* <?php echo $emailErr;?></span>
+                <span class="error">* <?php echo $emailErr . " &nbsp; " . $emailExistErr ;?></span>
             </div>
             <!---------------------------------------------------------------------->
             <div>

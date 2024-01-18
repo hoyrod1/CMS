@@ -8,7 +8,7 @@
  * @package  Unlogged_Nav_Link_Configuration
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/incudes/unlogged_nav_link.php
+ * @link     https://cms/incudes/links/unlogged_nav_link.php
  */
 ?>
 
@@ -45,15 +45,16 @@
           <div class="container">
             <?php
             if (isset($_SESSION["user_id"])) {
-                echo '
-                <a href="dashboard.php" class="navbar-brand">STC Media Blog</a>
-                <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <ul class="navbar-nav mr-auto">
-                  <li class="nav-item">
-                    <a href="myprofile.php" class="nav-link">Home</a>
-                  </li>';
+                  $name = $_SESSION["admin_name"];
+                  echo '
+                  <a href="dashboard.php" class="navbar-brand">STC Media Blog</a>
+                  <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                      <a href="profile.php?admin_name='. $name .'" class="nav-link">Home</a>
+                    </li>';
             } else {
                 echo '
                 <a href="index.php" class="navbar-brand">STC Media Blog</a>
@@ -70,16 +71,16 @@
                 <a href="about.php" class="nav-link">About</a>
               </li>
               <li class="nav-item">
-                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
+                <a href="feature.php" class="nav-link">Feature</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="service.php">Service</a>
               </li>
               <li class="nav-item">
                 <a href="contact.php" class="nav-link">Contact</a>
               </li>
               <li class="nav-item">
-                <a href="feature.php" class="nav-link">Feature</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="service.php">Service</a>
+                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
               </li>
               <?php
 

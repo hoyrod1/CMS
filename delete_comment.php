@@ -15,12 +15,12 @@ require_once "includes/db_conn.php";
 require_once "includes/functions.php";
 require_once "includes/date_time.php";
 
-confirmLogin(); 
+confirmLogin();
 
-if (isset($_GET['id'])) {
+$com_id     = $_GET['id'];
 
-    $com_id     = $_GET['id'];
-    $admin_name = $_SESSION['admin_name'];
+if (isset($com_id)) {
+
     $connect    = new Database("localhost", "root", "root", "cms");
     $sql        = "DELETE FROM comments WHERE id = :com_id";
     $pre_stmt = $connect->conn()->prepare($sql);
@@ -28,11 +28,14 @@ if (isset($_GET['id'])) {
     $execute = $pre_stmt->execute();
 
     if ($execute) {
-        $_SESSION['success_message'] = "Comment has been deleted!";
+        $_SESSION['success_message'] = "Comment has been deleted";
         redirect('comments.php');
     } else {
-        $_SESSION['error_message'] = "ERROR! Comment was not deleted.";
+        $_SESSION['error_message'] = "ERROR! Comment was not deleted";
         redirect('comments.php');
     }
 
+} else {
+    $_SESSION['error_message'] = "ERROR! Comment does not exist";
+    redirect('comments.php');
 }

@@ -20,7 +20,7 @@ require_once "includes/date_time.php";
 <!-------------------------- HTML-NAV SECTION -------------------------->
 <?php 
 $title = "Search Post";
-require_once "includes/unlogged_nav_links.php"; 
+require_once "includes/links/unlogged_nav_links.php"; 
 ?>
 <!--------------------------  HTML-NAV SECTION -------------------------->
   <hr>

@@ -18,18 +18,18 @@ require "includes/date_time.php";
 <!------------------------ OPENING HTML TAGS AND NAV LINKS ------------------------>
       <?php 
         $title = "Home Page";
-        require_once "includes/reg_log_nav_link.php"; 
+        require_once "includes/links/reg_log_nav_link.php"; 
         ?>
 <!------------------------ CLOSING HTML TAGS AND NAV LINKS ------------------------>
 
         <!------------------------------ HEADER BEGINS ----------------------------->
         <hr>
-        <header class="bg-dark text-white py-3">
+        <header class="bg-light text-white py-3">
           <div class="container">
             <div class="row">
               <div class="col-md-12 ">
                 <h1>
-                  <i class="index_i fas fa-text-height"> 
+                  <i class="index_i fas fa-text-height text-info"> 
                     Welcome to STC Media CMS Home Page
                   </i>
                 </h1>

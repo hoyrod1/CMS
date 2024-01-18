@@ -20,11 +20,19 @@ $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
 if (isset($_POST['submit'])) {
+  
+    //------- SET $adminName TO SESSION OR COOKIE ADMIN NAME -------//
+    $adminName = "";
+    if (isset($_SESSION["admin_name"])) {
+        $adminName = $_SESSION["admin_name"];
+    } elseif (isset($_COOKIE["admin_name"])) {
+        $adminName = $_COOKIE["admin_name"];
+    }
+    //--------------------------------------------------------------//
     $newTitle       = testInput($_POST['newtitle']);
     $newCategory    = testInput($_POST['newCategory']);
     $postdesciption = testInput($_POST['postdesciption']);
     $newImage       = $_FILES['image']['name'];
-    $adminName      = $_SESSION['admin_name'];
 
     if (empty($newTitle) && empty($newCategory) && empty($newImage) && empty($postdesciption)) {
         $_SESSION['error_message'] = "Please enter title, category and description";
@@ -128,6 +136,12 @@ if (isset($_POST['submit'])) {
 
     }
 }
+
+//----------- BEGGINING HTML-NAV SECTION -----------//
+$title = "Create Post Page";
+require_once "includes/links/loggedin_nav_links.php";
+//------------ ENDING HTML-NAV SECTION ------------//
+
 ?>
 <!------------- BEGGINING JAVASCRIPT SECTION ------------->
 <script>
@@ -138,15 +152,9 @@ if (isset($_POST['submit'])) {
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!--  HTML-NAV SECTION -->
-<?php 
-$title = "Create Post Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!--  HTML-NAV SECTION -->
   <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light text-white py-3">
     <div class="container">
       <div class="row">
         <div class="col-md-12 ">

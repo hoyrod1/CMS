@@ -55,6 +55,11 @@ if (isset($_POST['submit'])) {
     }
 
 }
+
+//---------------- BEGGING HTML-NAV SECTION ----------------//
+$title = "Delete Post Page";
+require_once "includes/links/loggedin_nav_links.php";
+//---------------- ENDING HTML-NAV SECTION ----------------//
 ?>
 <!------------- BEGGINING JAVASCRIPT SECTION ------------->
 <script>
@@ -65,20 +70,13 @@ if (isset($_POST['submit'])) {
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!--  HTML-NAV SECTION -->
-<?php 
-$title = "Delete Post Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!--  HTML-NAV SECTION -->
-
   <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light text-white py-3">
     <div class="container">
       <div class="row">
         <div class="col-md-12 ">
-          <h1><i class="fas fa-edit" style="color: #3F628A;"> Delete Post </i></h1>
+          <h1 style="text-align:center;"><i class="fas fa-edit" style="color: #3F628A;"> Delete Post </i></h1>
         </div>
       </div>
     </div>
@@ -124,16 +122,14 @@ require_once "includes/loggedin_nav_links.php";
         <!-----------------POST DESCRIPTION OF TITLE AND CATEGORY------------------->
         <div class="form-group bg-dark px-4 py-2">
             <label for="post"><span style="color: white;">Existing Description:</span></label>
-            <textarea name="edit_post" class="form-control" id="post" rows="8" cols="80" disabled>
-                <?php echo $old_post; ?>
-            </textarea>
+            <textarea name="edit_post" class="form-control" id="post" rows="8" cols="80" disabled><?php echo $old_post; ?></textarea>
         </div>
         <!---------------NAVIGATE BACK TO DASHBOARD AND SUBMIT BUTTON--------------->
         <div class="row py-3">
           <div class="col-lg-6 mb-2">
-            <a href="dashboard.php" class="btn btn-warning btn-block">
+            <a href="post.php" class="btn btn-warning btn-block">
                 <i class="fas fa-arrow-left"></i> 
-                    Back to Dashboard
+                    Back to Post page
             </a>
           </div>
         <div class="col-lg-6 mb-2">

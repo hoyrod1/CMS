@@ -8,7 +8,7 @@
  * @package  Nav_Links
  * @author   Rodney St.Cloud <hoyrod1@aol.com>
  * @license  STC Media inc
- * @link     https://cms/incudes/nav_links.php
+ * @link     https://cms/incudes/links/nav_links.php
  */
 ?>
 <!DOCTYPE html>
@@ -31,16 +31,26 @@
 <div style="height: 10px;background-color: #f4f4f4;"></div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
   <div class="container">
-      <a href="myprofile.php" class="navbar-brand">STC Media Blog</a>
+      <?php if(isset($_SESSION["admin_name"])) : ?>
+        <a href="profile.php?admin_name=<?php echo htmlentities($_SESSION['admin_name']); ?>" class="navbar-brand">STC Media Blog</a>
+      <?php else: ?>
+        <a href="profile.php?admin_name=<?php echo htmlentities($_COOKIE['admin_name']); ?>" class="navbar-brand">STC Media Blog</a>
+      <?php endif; ?>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
           <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarcollapseCMS">
           <ul class="navbar-nav mr-auto">
               <li class="nav-item">
-                  <a href="myprofile.php" class="nav-link">
-                      <i class="fas fa-user text-success"></i> My Profile
+                <?php if(isset($_SESSION["admin_name"])) : ?>
+                  <a href="profile.php?admin_name=<?php echo htmlentities($_SESSION['admin_name']); ?>" class="nav-link">
+                      <i class="fas fa-user text-success"></i> Admin Profile
                   </a>
+                <?php else: ?>
+                  <a href="profile.php?admin_name=<?php echo htmlentities($_COOKIE['admin_name']); ?>" class="nav-link">
+                      <i class="fas fa-user text-success"></i> Admin Profile
+                  </a>
+                <?php endif; ?>
               </li>
               <li class="nav-item">
                   <a href="dashboard.php" class="nav-link">Dashboard</a>
@@ -58,7 +68,7 @@
                   <a href="comments.php" class="nav-link">Comments</a>
               </li>
               <li class="nav-item">
-                  <a href="blog_post.php?page=1" class="nav-link">Live Blog</a>
+                  <a href="blog_post.php?page=1" class="nav-link">Blog</a>
               </li>
                <li class="nav-item ml-5">
                    <a href="logout.php" class="nav-link text-danger">

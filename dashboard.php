@@ -20,16 +20,16 @@ confirmLogin();
 
 //------------BEGGINING  HTML-NAV SECTION ------------>
 $title = "Dashboard Page";
-require_once "includes/loggedin_nav_links.php";
+require_once "includes/links/loggedin_nav_links.php";
 //-------------ENDING HTML-NAV SECTION---------------->
 ?>
 
 <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light">
     <div class="container">
       <div class="row">
-        <div class="col-md-12 mb-2">    
+        <div class="col-md-12 mb-2" style="border-radius: 2px solid #6c757d;">    
           <h1>
               <i class="fas fa-cog" style="color: #3F628A;">
                   Welcome to the Dashboard page
@@ -127,7 +127,7 @@ require_once "includes/loggedin_nav_links.php";
 
     <!-------------------------RIGHT SIDE BEGIINS------------------------->
     <div class="col-lg-10">
-        <h1>Top Post</h1>
+        <h1>Recent Posts</h1>
         <table class="table table-strip table-hover">
           <thead class="thead-dark">
             <tr>

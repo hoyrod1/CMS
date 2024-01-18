@@ -17,6 +17,11 @@ require_once "includes/date_time.php";
 
 $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
+
+//---------------------- BEGGING HTML-NAV SECTION ----------------------//
+$title = "Comment Page";
+require_once "includes/links/loggedin_nav_links.php";
+//---------------------- ENDING HTML-NAV SECTION ----------------------//
 ?>
 <!------------- BEGGINING JAVASCRIPT SECTION ------------->
 <script>
@@ -35,16 +40,9 @@ confirmLogin();
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!----------------------  HTML-NAV SECTION ---------------------->
-<?php 
-$title = "Comment Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!----------------------  HTML-NAV SECTION ---------------------->
-
   <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light text-white py-3">
     <div class="container">
       <div class="row">
         <div class="col-md-12 ">
@@ -211,11 +209,18 @@ require_once "includes/loggedin_nav_links.php";
                 </td>
             </tr>
           </thead>
-          <!------BEGINNING OF TABLE HEADING------->
+          <!----------------ENDING OF TABLE HEADING----------------->
             <?php }; ?>
         </table>
         <!-------------ENDING OF TABLE----------------->
         </div>
+      </div>
+      <div style="width:100%;background-color: #343a40;padding:4px;">
+                <div class="col-lg-4 mx-auto">
+                    <a href="dashboard.php" class="btn btn-warning btn-block">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
       </div>
     </section>
   <hr>

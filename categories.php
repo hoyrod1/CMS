@@ -19,8 +19,16 @@ $_SESSION['trackingURL'] = $_SERVER['PHP_SELF'];
 confirmLogin();
 
 if (isset($_POST['submit'])) {
+  
+    //------- SET $adminName TO SESSION OR COOKIE ADMIN NAME -------//
+    $admin = "";
+    if (isset($_SESSION["admin_name"])) {
+        $admin = $_SESSION["admin_name"];
+    } elseif (isset($_COOKIE["admin_name"])) {
+        $admin = $_COOKIE["admin_name"];
+    }
+    //--------------------------------------------------------------//
     $categoryTitle = testInput($_POST['newtitle']);
-    $admin         = $_SESSION['admin_name'];
 
     if (empty($categoryTitle)) {
         $_SESSION['error_message'] = "Please enter a category";
@@ -56,6 +64,10 @@ if (isset($_POST['submit'])) {
         }
     }
 }
+//----------- BEGGINING HTML-NAV SECTION -----------//
+$title = "Category Page";
+require_once "includes/links/loggedin_nav_links.php"; 
+//------------ ENDING HTML-NAV SECTION ------------//
 
 ?>
 <!------------- BEGGINING JAVASCRIPT SECTION ------------->
@@ -71,16 +83,9 @@ if (isset($_POST['submit'])) {
 </script>
 <!------------- ENDING JAVASCRIPT SECTION ---------------->
 
-<!------------ BEGGINING HTML-NAV SECTION -------------->
-<?php 
-$title = "Category Page";
-require_once "includes/loggedin_nav_links.php"; 
-?>
-<!------------- ENDING HTML-NAV SECTION ---------------->
-
   <hr>
   <!-- HEADER BEGINS-->
-  <header class="bg-dark text-white py-3">
+  <header class="bg-light text-white py-3">
   <div class="container">
     <div class="row">
       <div class="col-md-12 ">

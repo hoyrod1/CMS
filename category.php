@@ -51,10 +51,27 @@ if (isset($_POST["email_button"])) {
 
 //-------------------------- HTML-NAV SECTION --------------------------//
 $title = "Category Page";
-require_once "includes/blog_nav_links.php"; 
+require_once "includes/links/blog_nav_links.php"; 
 //--------------------------  HTML-NAV SECTION --------------------------//
 
 ?>
+
+<hr>
+<!-- HEADER BEGINS-->
+<header class="bg-light text-white py-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 ">
+        <h1 style="text-align: center;">
+          <i class="about_i fas fa-text-height text-info"> 
+            STC Media CMS Category Page
+          </i>
+        </h1>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- HEADER ENDS-->
 
 <hr>
 <!-- CONTAINER BEGINS-->
@@ -101,7 +118,7 @@ require_once "includes/blog_nav_links.php";
         $author         = $cat_row['author'];
         $cat_date_time = $cat_row['date_time'];
 
-        $dateTime = date('m/d/Y g:i a', strtotime($cat_date_time));
+        $dateTime = date('m-d-Y g:i a', strtotime($cat_date_time));
 
         ?>
   <div class="row mt-4">
@@ -112,27 +129,19 @@ require_once "includes/blog_nav_links.php";
       </h1>
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">
-          Post: <?php echo htmlentities($cat_id); ?>
-        </h4>
-        <small class="text-muted">
-          <span class="text-dark">
+        <h5 class="card-title">
             Category of
             <a href="category.php?category=<?php echo urlencode(htmlspecialchars_decode($title)); ?>">
               <?php echo $title; ?>
-            </a>  
-            Written by 
-              <a href="profile.php?admin_name=<?php echo htmlentities($author); ?>">
-                <?php echo htmlentities($author); ?>
-              </a> on
-              <?php
-                echo htmlentities($dateTime);
-                ?>
+            </a>
+        </h5>
+        <small class="text-muted">
+          <span class="text-dark">  
+            Written by <strong><?php echo htmlentities($author); ?></strong> on
+              <?php echo htmlentities($dateTime); ?>
           </span>
         </small>
-    
-        <hr>
-      
+        <hr>      
       </div>
     </div>
     <br>
@@ -164,7 +173,7 @@ require_once "includes/blog_nav_links.php";
         if (isset($_SESSION["user_id"])) {
             echo '
             <div class="card">
-              <div class="card-header bg-dark text-light">
+              <div class="card-header bg-info text-light">
                 <h2 class="lead">
                   <center>
                     Hello  &nbsp;' . $_SESSION['admin_name'] . 
@@ -187,7 +196,7 @@ require_once "includes/blog_nav_links.php";
         } else {
             echo '
             <div class="card">
-              <div class="card-header bg-dark text-light">
+              <div class="card-header bg-info text-light">
                 <h2 class="lead"><center>Sign Up</center></h2>
               </div>
               <div class="card-body" style="background-color:#666699;">
@@ -256,7 +265,7 @@ require_once "includes/blog_nav_links.php";
             $recent_datetime = $rec_post['reg_date'];
             $recent_image    = $rec_post['image'];
             ?>
-        <div class="media mb-3" style="border: 2px solid white">
+        <div class="media mb-3" style="box-shadow:1px 1px 20px 1px rgba(0, 0, 0, 0.5);background-color:#17a2b8;">
           <img src="<?php echo 'images/'.htmlentities($recent_image); ?>" width="70px" heigth="74" class="d-block img-fluid align-self-start">
           <div class="media-body ml-2">
             <a href="full_post.php?id=<?php echo htmlentities($recent_id); ?>">

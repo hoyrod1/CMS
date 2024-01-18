@@ -17,10 +17,10 @@ require_once "includes/date_time.php";
 
 confirmLogin();
 
-if (isset($_GET['id'])) {
+$admin_id = $_GET['id'];
 
-    $admin_id = $_GET['id'];
-    $admin_name  = $_SESSION['admin_name'];
+if (isset($admin_id)) {
+
     $connect     = new Database("localhost", "root", "root", "cms");
     $sql         = "DELETE FROM admin WHERE id = :admin_id";
     $pre_stmt = $connect->conn()->prepare($sql);
@@ -29,12 +29,15 @@ if (isset($_GET['id'])) {
 
     if ($execute) {
 
-        $_SESSION['success_message'] = "Admin has been deleted!";
+        $_SESSION['success_message'] = "Admin has been deleted";
         redirect('admin.php');
     } else {
 
-        $_SESSION['error_message'] = "ERROR! Admin was not deleted.";
+        $_SESSION['error_message'] = "ERROR! Admin was not deleted";
         redirect('admin.php');
     }
 
+} else {
+    $_SESSION['error_message'] = "ERROR! Admin does not exist";
+    redirect('admin.php');
 }

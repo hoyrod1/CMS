@@ -52,72 +52,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
 ?>
 
-<!DOCTYPE html>
-<html>
-    <head>
-    <meta charset="utf-8">
-    <meta name="author" content="BooBoo">
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Reset Password</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-
-    <script src="https://kit.fontawesome.com/dfc9e3c3d1.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="javascript/js_script.js"></script>
-
-    </head>
-    <body>
-<!-- NAV-BAR BEGINS -->
-    <div style="height: 10px;background-color: #f4f4f4;"></div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-          <!-- Brand -->
-          <div class="container">
-            <a href="index.php" class="navbar-brand">STC Media Blog</a>
-            <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarcollapseCMS">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Navbar links -->
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a href="index.php" class="nav-link">Home</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">About Page</a>
-              </li>
-              <li class="nav-item">
-                <a href="blog_post.php?page=1" class="nav-link">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">Contact Page</a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">Feature Page</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Service</a>
-              </li>
-              <li class="nav-item ml-5">
-                <a href="register.php" class="nav-link text-success"> 
-                  <i class="fa-solid fa-registered">Register</i>
-                </a>
-              </li>
-            </ul>
-            <!-- Navbar links -->
-          </div>
-        </nav>
-    <div style="height: 10px;background-color: #f4f4f4;"></div>
-    <!-- NAV BAR END-->
+    <!---------------------- OPENING HTML TAGS AND NAV LINKS --------------------->
+    <?php 
+      $title = "Reset Password";
+      require_once "includes/links/reset_email_nav_link.php"; 
+    ?>
+    <!---------------------- CLOSING HTML TAGS AND NAV LINKS --------------------->
+    <!-------------------------------- NAV BAR END-------------------------------->
     <hr>
     <!-- HEADER BEGINS-->
     <header class="bg-dark text-white py-3">
       <div class="container">
         <div class="row">
           <div class="col-md-12 ">
-            <h1></h1>
+            <h1 style="text-align: center;">
+              <i class="index_i fas fa-text-height text-info"> 
+                  Welcome to STC Media Reset Password Page
+              </i>
+            </h1>
           </div>
         </div>
       </div>
@@ -165,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
   </form>
 
-  <div style="margin-top:10px;"><a href="login.php" style="color: #f4f4f4;margin-top:15px;">Login</a></div>
+  <div style="margin-top:10px;"><a href="login.php" style="color: #28a745;margin-top:15px;">Login</a></div>
 
 </div>
 <!------------------------- FORM ENDS ------------------------------>
